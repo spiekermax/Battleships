@@ -3,7 +3,7 @@
  *
  * This generated file contains a sample Java project to get you started.
  * For more details take a look at the Java Quickstart chapter in the Gradle
- * User Manual available at https://docs.gradle.org/5.4.1-20190522110022+0000/userguide/tutorial_java_projects.html
+ * User Manual available at https://docs.gradle.org/5.4.1/userguide/tutorial_java_projects.html
  */
 
 plugins {
@@ -26,6 +26,14 @@ dependencies {
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
+}
+
+jar {
+    manifest {
+        attributes(
+            'Main-Class': 'de.uni_hannover.hci.battleships.App'
+        )
+    }
 }
 
 // Define the main class for the application
