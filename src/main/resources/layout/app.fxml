@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.uni_hannover.hci.battleships.ui.board.BoardView?>
+<?import de.uni_hannover.hci.battleships.ui.chat.ChatView?>
+
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+
+<GridPane
+    xmlns="http://javafx.com/javafx"
+    xmlns:fx="http://javafx.com/fxml"
+
+    minHeight="-Infinity" minWidth="-Infinity"
+    maxHeight="-Infinity" maxWidth="-Infinity">
+
+    <columnConstraints>
+        <ColumnConstraints percentWidth="70.0"/>
+        <ColumnConstraints percentWidth="30.0"/>
+    </columnConstraints>
+
+    <!-- Chat -->
+    <ChatView fx:id="chat" GridPane.vgrow="ALWAYS" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"/>
+
+    <!-- Game -->
+    <GridPane fx:id="game">
+
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="4.0"/>
+            <ColumnConstraints hgrow="ALWAYS" percentWidth="40.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="4.0"/>
+        </columnConstraints>
+
+        <rowConstraints>
+            <RowConstraints vgrow="SOMETIMES" minHeight="4.0"/>
+            <RowConstraints vgrow="ALWAYS" percentHeight="40.0"/>
+            <RowConstraints vgrow="SOMETIMES" minHeight="8.0"/>
+            <RowConstraints vgrow="ALWAYS" percentHeight="40.0"/>
+            <RowConstraints vgrow="SOMETIMES" minHeight="4.0"/>
+        </rowConstraints>
+
+        <!-- Enemy board -->
+        <BoardView fx:id="enemy_board" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+        <!-- Player board -->
+        <BoardView fx:id="player_board" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+    </GridPane>
+
+</GridPane>
