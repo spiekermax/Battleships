@@ -76,13 +76,16 @@ public class BoardView extends GridPane
      */
     private void onSizeChange(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue)
     {
-        double cellSize = this.parseCellSize();
+        // Calculate ideal cell size
+        double cellSize = this.calcCellSize();
 
+        // Adjust constraints to cell size
         RowConstraints rowConstraints = new RowConstraints();
         ColumnConstraints columnConstraints = new ColumnConstraints();
         rowConstraints.setPrefHeight(cellSize);
         columnConstraints.setPrefWidth(cellSize);
 
+        // Update constraints
         this.getRowConstraints().clear();
         this.getColumnConstraints().clear();
         for(int i = 0; i < BOARD_SIZE; ++i)
@@ -98,18 +101,24 @@ public class BoardView extends GridPane
      */
     private void onMouseMove(MouseEvent e)
     {
-        Vector2i currentMouseTargetCoords = this.parseCellCoords(e.getX(), e.getY());
+        // Get the cell, the mouse points at
+        Vector2i currentMouseTargetCoords = this.calcCellCoords(e.getX(), e.getY());
         BoardViewCell currentMouseTargetCell = this.getCell(currentMouseTargetCoords);
 
-        if(currentMouseTargetCell == this.getLastMouseTargetCell()) return;
+        // If the targeted cell changed
+        if(currentMouseTargetCell != this.getLastMouseTargetCell())
+        {
+            // Remove highlighting from previously targeted cell
+            if(this.getLastMouseTargetCell() != null)
+                this.getLastMouseTargetCell().removeHighlighting();
 
-        if(this.getLastMouseTargetCell() != null)
-            this.getLastMouseTargetCell().removeHighlighting();
+            // Add highlighting to the currently targeted cell
+            if(currentMouseTargetCell != null)
+                currentMouseTargetCell.addHighlighting();
 
-        if(currentMouseTargetCell != null)
-            currentMouseTargetCell.addHighlighting();
-
-        this.setLastMouseTargetCell(currentMouseTargetCell);
+            // Declare cell as handled
+            this.setLastMouseTargetCell(currentMouseTargetCell);
+        }
     }
 
     /**
@@ -118,7 +127,8 @@ public class BoardView extends GridPane
      */
     private void onMouseClick(MouseEvent e)
     {
-        Vector2i coords = this.parseCellCoords(e.getX(), e.getY());
+        // Fire 'board-view-cell-clicked' event, passing on the grid coordinates of the click.
+        Vector2i coords = this.calcCellCoords(e.getX(), e.getY());
         this.fireEvent(new BoardViewCellClickedEvent(coords));
 
         // Demo code only
@@ -131,9 +141,11 @@ public class BoardView extends GridPane
      */
     private void onMouseExited(MouseEvent e)
     {
+        // Remove all highlighting, once the mouse leaves this component
         if(this.getLastMouseTargetCell() != null)
             this.getLastMouseTargetCell().removeHighlighting();
 
+        // Declare no cell as highlighted
         this.setLastMouseTargetCell(null);
     }
 
@@ -144,7 +156,7 @@ public class BoardView extends GridPane
      * TODO
      * @return
      */
-    private double parseCellSize()
+    private double calcCellSize()
     {
         return Math.min(this.getWidth(), this.getHeight()) / BOARD_SIZE;
     }
@@ -155,9 +167,9 @@ public class BoardView extends GridPane
      * @param mouseY
      * @return
      */
-    private Vector2i parseCellCoords(double mouseX, double mouseY)
+    private Vector2i calcCellCoords(double mouseX, double mouseY)
     {
-        double cellSize = this.parseCellSize();
+        double cellSize = this.calcCellSize();
 
         int x = (int) (mouseX / cellSize);
         int y = (int) (mouseY / cellSize);
