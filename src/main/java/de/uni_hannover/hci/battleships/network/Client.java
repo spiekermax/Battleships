@@ -27,6 +27,7 @@ public class Client {
             String toSend = s + "\n";
             bw.write(toSend);
             bw.flush();
+
             while(toSend != "shutdown")
             {
                 System.out.println(toSend);

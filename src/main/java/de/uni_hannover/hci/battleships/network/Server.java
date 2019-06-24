@@ -38,6 +38,7 @@ public class Server
         this.inputStream = new DataInputStream(new BufferedInputStream(this.client.getInputStream()));
 
         boolean runServer = true;
+
         while(runServer)
         {
             try {
