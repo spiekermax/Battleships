@@ -1,13 +1,16 @@
 package de.uni_hannover.hci.battleships;
 
 // Internal dependencies
-import de.uni_hannover.hci.battleships.resources.R;
+import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.NetworkConfigDialog;
+import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.event.NetworkConfigDialogResponseEvent;
+import de.uni_hannover.hci.battleships.util.resource.R;
 
 // Java
 import java.io.IOException;
 
 // JavaFX
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -30,6 +33,7 @@ public class App extends Application
     @Override
     public void start(Stage primaryStage) throws IOException
     {
+        // Lade, konfiguriere und zeige das Hauptlayout
         Parent root = FXMLLoader.load( R.layout("app.fxml") );
 
         primaryStage.setTitle(APP_TITLE);
@@ -37,10 +41,31 @@ public class App extends Application
         primaryStage.setMinWidth(MIN_WINDOW_WIDTH);
         primaryStage.setMinHeight(MIN_WINDOW_HEIGHT);
         primaryStage.show();
+
+        // Ermittle gewünschte Netzwerkkonfiguration
+        NetworkConfigDialog networkConfigDialog = new NetworkConfigDialog();
+        networkConfigDialog.getEventTarget().addEventHandler(NetworkConfigDialogResponseEvent.EVENT_TYPE, event ->
+        {
+            switch(event.getConfig())
+            {
+                case HOST:
+                    System.out.println("User möchte hosten");
+                    break;
+                case JOIN:
+                    System.out.println("User möchte joinen");
+                    break;
+                case EXIT:
+                    Platform.exit();
+                    System.exit(0);
+                default:
+                    throw new IllegalArgumentException("ERROR: App.start(): Illegal user response!");
+            }
+        });
+        networkConfigDialog.present();
     }
 
     public static void main(String[] args)
     {
-        launch(args);
+        App.launch(args);
     }
 }

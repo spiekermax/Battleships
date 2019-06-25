@@ -1,4 +1,4 @@
-package de.uni_hannover.hci.battleships.ui.chat.events;
+package de.uni_hannover.hci.battleships.ui.chat.event;
 
 // JavaFX
 import javafx.event.EventHandler;

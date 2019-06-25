@@ -1,10 +1,10 @@
 package de.uni_hannover.hci.battleships.ui.board;
 
 // Internal dependencies
-import de.uni_hannover.hci.battleships.resources.R;
+import de.uni_hannover.hci.battleships.util.resource.R;
 import de.uni_hannover.hci.battleships.ui.board.cell.BoardViewCell;
 import de.uni_hannover.hci.battleships.ui.board.cell.BoardViewCellColor;
-import de.uni_hannover.hci.battleships.ui.board.events.BoardViewCellClickedEvent;
+import de.uni_hannover.hci.battleships.ui.board.event.BoardViewCellClickedEvent;
 import de.uni_hannover.hci.battleships.util.Vector2i;
 
 // Java

@@ -1,8 +1,8 @@
 package de.uni_hannover.hci.battleships.ui.chat;
 
 // Internal dependencies
-import de.uni_hannover.hci.battleships.resources.R;
-import de.uni_hannover.hci.battleships.ui.chat.events.ChatViewMessageConfirmedEvent;
+import de.uni_hannover.hci.battleships.util.resource.R;
+import de.uni_hannover.hci.battleships.ui.chat.event.ChatViewMessageConfirmedEvent;
 
 // Java
 import java.io.IOException;

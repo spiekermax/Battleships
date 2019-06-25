@@ -1,4 +1,4 @@
-package de.uni_hannover.hci.battleships.ui.board.events;
+package de.uni_hannover.hci.battleships.ui.board.event;
 
 // Internal dependencies
 import de.uni_hannover.hci.battleships.util.Vector2i;

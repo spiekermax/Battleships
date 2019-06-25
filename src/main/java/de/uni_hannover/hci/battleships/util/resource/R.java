@@ -1,4 +1,4 @@
-package de.uni_hannover.hci.battleships.resources;
+package de.uni_hannover.hci.battleships.util.resource;
 
 // Java
 import java.net.URL;
