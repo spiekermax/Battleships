@@ -1,9 +1,17 @@
 package de.uni_hannover.hci.battleships.data;
 
+/**
+ * Diese Klasse beschreibt ein Spielfeld
+ */
 public class Board {
     protected FieldMode[][] board;
 
-    public Board(int height, int width) {
+    /**
+     * Es wird ein neues Spielfeld erstellt, welches die Anfangskonfiguration hat, dass alle Felder Ozean sind.
+     * @param width Die Breite des Spielfelds
+     * @param height Die Höhe des Spielfelds
+     */
+    public Board(int width, int height) {
         this.board = new FieldMode[width][height];
 
         for(int i = 0; i < width; i++) {
@@ -17,50 +25,47 @@ public class Board {
         return this.board;
     }
 
-    public int getWidth() {
-        return this.board.length;
-    }
+    public int getWidth() { return this.board.length; }
 
-    public int getHeight() {
-        return this.board[0].length;
-    }
+    public int getHeight() { return this.board[0].length; }
 
     public FieldMode getField(int x, int y) {
-        return board[x][y];
+        if(!outOfBounds(x,y)) {
+            return board[x][y];
+        } else {
+            return null;
+        }
     }
 
     public void setShip(int x, int y) {
-        board[x][y] = FieldMode.SHIP;
+        if(!outOfBounds(x,y)) {
+            board[x][y] = FieldMode.SHIP;
+        }
     }
 
     public void setSankedShip(int x, int y) {
-        board[x][y] = FieldMode.SANKED_SHIP;
+        if (!outOfBounds(x, y)) {
+            board[x][y] = FieldMode.SANKED_SHIP;
+        }
+    }
+
+    public void setShot(int x, int y) {
+        if (!outOfBounds(x, y)) {
+            board[x][y] = FieldMode.SHOT;
+        }
     }
 
     public boolean outOfBounds(int x, int y) {
         return !(x >= 0 && x < board.length && y >= 0 && y < board[0].length);
     }
 
-    /*public boolean validDirection(int x, int y, int dx, int dy) {
-        for(int i = 0; i < 10 && !outOfBounds(x+i,y); i++) {
-            for(int j = 0; j < 10 && !outOfBounds(x+i, y+j); j++) {
-                if(i == j) {continue;}  //Falls diagonal oder keine Richtung
-                if(getField(x+i, y+j) == FieldMode.SHIP) {
-
-                }
-            }
-        }
+    /**
+     * Diese Methode prüft, ob das Spielfeld eine gültige Besetzung von Schiffen hat.
+     * Die Schiffe dürfen nicht über Eck, diagonal oder unmittelbar nebeneinander gebaut sein.
+     * @return Ist das Spielfeld gülzig, so wird true zurückgegeben.
+     */
+    public boolean validBoard() {
+        return false;
     }
-
-    public boolean validShip(int x, int y) {
-        for(int i = 0; i < 10 && !outOfBounds(x+i*dx,y); i++) {
-            for(int j = 0; j < 10 && !outOfBounds(x+i*dx, y+i*dy); j++) {
-                if(}  //Falls diagonal oder keine Richtung
-                if(getField(x+i*x, y+j*y) == FieldMode.SHIP) {
-
-                }
-            }
-        }
-    }*/
 
 }
