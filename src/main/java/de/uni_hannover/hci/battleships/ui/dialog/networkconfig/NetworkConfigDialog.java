@@ -2,12 +2,12 @@ package de.uni_hannover.hci.battleships.ui.dialog.networkconfig;
 
 // Internal dependencies
 import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.event.NetworkConfigDialogResponseEvent;
+import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.model.NetworkConfigOption;
 
 // Java
 import java.util.Optional;
 
 // JavaFX
-import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.model.NetworkConfigOption;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
