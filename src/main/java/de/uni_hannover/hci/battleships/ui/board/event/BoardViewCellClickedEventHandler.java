@@ -4,4 +4,4 @@ package de.uni_hannover.hci.battleships.ui.board.event;
 import javafx.event.EventHandler;
 
 
-public interface BoardViewCellClickedEventHandler extends EventHandler<BoardViewCellClickedEvent> { }
+public interface BoardViewCellClickedEventHandler extends EventHandler<BoardViewCellClickedEvent> {}
