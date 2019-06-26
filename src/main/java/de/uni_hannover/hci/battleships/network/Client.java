@@ -19,11 +19,13 @@ public class Client {
         this.client = new Socket("localhost", port);
     }
 
-    public void ipaddress()
+    public void address()
     {
         try {
             ip = InetAddress.getLocalHost();
             System.out.println("IP address : " + ip);
+            System.out.println("Port address : " + );
+
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
