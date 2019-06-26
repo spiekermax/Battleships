@@ -7,6 +7,7 @@ import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.event.NetworkConf
 import java.util.Optional;
 
 // JavaFX
+import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.model.NetworkConfigOption;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
