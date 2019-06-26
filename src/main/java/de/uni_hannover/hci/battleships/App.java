@@ -37,7 +37,7 @@ public class App extends Application
         Parent root = FXMLLoader.load( R.layout("app.fxml") );
 
         primaryStage.setTitle(APP_TITLE);
-        primaryStage.setScene( new Scene(root, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT) );
+        primaryStage.setScene(new Scene(root, DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT));
         primaryStage.setMinWidth(MIN_WINDOW_WIDTH);
         primaryStage.setMinHeight(MIN_WINDOW_HEIGHT);
         primaryStage.show();
