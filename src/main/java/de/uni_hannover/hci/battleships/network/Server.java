@@ -4,7 +4,6 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-// Wehe das passiert nochmal, Jonas! :/
 public class Server
 {
     private int port;

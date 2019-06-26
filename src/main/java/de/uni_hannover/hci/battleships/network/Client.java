@@ -2,6 +2,8 @@ package de.uni_hannover.hci.battleships.network;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 
 public class Client {
@@ -10,16 +12,29 @@ public class Client {
     private DataInputStream console;
     private OutputStream output;
     private InputStream input;
-
+    private InetAddress ip;
 
     public Client(int port) throws IOException
     {
         this.client = new Socket("localhost", port);
     }
 
+    public void address()
+    {
+        try {
+            ip = InetAddress.getLocalHost();
+            System.out.println("IP address : " + ip);
+            System.out.println("Port address : " + );
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void sendMessages()
     {
         try {
+
             this.output = this.client.getOutputStream();
             OutputStreamWriter osw = new OutputStreamWriter(this.output);
             BufferedWriter bw = new BufferedWriter(osw);
