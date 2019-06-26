@@ -1,7 +1,7 @@
 package de.uni_hannover.hci.battleships.ui.dialog.networkconfig.event;
 
 // Internal dependencies
-import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.NetworkConfigOption;
+import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.model.NetworkConfigOption;
 
 // JavaFX
 import javafx.event.Event;
