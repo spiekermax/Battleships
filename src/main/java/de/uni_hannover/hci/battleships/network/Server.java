@@ -15,16 +15,21 @@ public class Server
     private Socket client;
 
     // Input stream
-    DataInputStream inputStream;
+    InputStream inputStream;
 
-    public Server(int port) throws IOException
+    public Server(int port)
     {
-        this.port = port;
+        try {
+            this.port = port;
 
-        this.server = new ServerSocket(this.port);
-        this.waitForConnection();
-
-        this.shutdown();
+            this.server = new ServerSocket(this.port);
+            System.out.print("Server gestartet!\n");
+            this.waitForConnection();
+            this.readIncomingMessages();
+            this.shutdown();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void waitForConnection() throws IOException
@@ -34,17 +39,17 @@ public class Server
 
     private void readIncomingMessages() throws IOException
     {
-        this.inputStream = new DataInputStream(new BufferedInputStream(this.client.getInputStream()));
-
         boolean runServer = true;
 
         while(runServer)
         {
             try {
-                String in = this.inputStream.readUTF();
-                if(in == "shutdown") runServer = false;
-                // if(in != null) this.fireEvent(...);
-                System.out.println(in);
+                //this.client = this.server.accept();
+                this.inputStream = client.getInputStream();
+                InputStreamReader isr = new InputStreamReader(inputStream);
+                BufferedReader br = new BufferedReader(isr);
+                String s = br.readLine();
+                System.out.println("Message from Client " + s);
             } catch (IOException e) { runServer = false; }
         }
         this.shutdown();

@@ -1,6 +1,8 @@
 package de.uni_hannover.hci.battleships;
 
 // Internal dependencies
+import de.uni_hannover.hci.battleships.network.Client;
+import de.uni_hannover.hci.battleships.network.Server;
 import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.NetworkConfigDialog;
 import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.event.NetworkConfigDialogResponseEvent;
 import de.uni_hannover.hci.battleships.util.resource.R;
@@ -49,9 +51,11 @@ public class App extends Application
             switch(event.getConfig())
             {
                 case HOST:
+                    Server server = new Server(1896);
                     System.out.println("User möchte hosten");
                     break;
                 case JOIN:
+                    Client client = new Client(1896);
                     System.out.println("User möchte joinen");
                     break;
                 case EXIT:

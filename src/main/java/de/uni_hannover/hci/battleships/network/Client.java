@@ -14,9 +14,15 @@ public class Client {
     private InputStream input;
     private InetAddress ip;
 
-    public Client(int port) throws IOException
+    public Client(int port)
     {
-        this.client = new Socket("localhost", port);
+        try{
+            this.client = new Socket("localhost", port);
+            System.out.print("Client gestartet!\n");
+            this.sendMessages();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void address()
@@ -24,7 +30,7 @@ public class Client {
         try {
             ip = InetAddress.getLocalHost();
             System.out.println("IP address : " + ip);
-            System.out.println("Port address : " + );
+            System.out.println("Port address : " );
 
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -34,19 +40,14 @@ public class Client {
     public void sendMessages()
     {
         try {
-
             this.output = this.client.getOutputStream();
             OutputStreamWriter osw = new OutputStreamWriter(this.output);
             BufferedWriter bw = new BufferedWriter(osw);
-            String s = "izerjherjwk";
+            String s = "Hello world!";
             String toSend = s + "\n";
             bw.write(toSend);
             bw.flush();
-
-            while(toSend != "shutdown")
-            {
-                System.out.println(toSend);
-            }
+            System.out.println(toSend);
         } catch (IOException e) {
             e.printStackTrace();
         }
