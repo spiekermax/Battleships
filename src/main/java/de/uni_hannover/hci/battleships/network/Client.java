@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.Socket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 
 public class Client {
@@ -12,7 +13,6 @@ public class Client {
     private DataInputStream console;
     private OutputStream output;
     private InputStream input;
-    private InetAddress ip;
 
     public Client(int port)
     {
@@ -25,32 +25,27 @@ public class Client {
         }
     }
 
-    public void address()
-    {
-        try {
-            ip = InetAddress.getLocalHost();
-            System.out.println("IP address : " + ip);
-            System.out.println("Port address : " );
-
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void sendMessages()
     {
         try {
-            this.output = this.client.getOutputStream();
-            OutputStreamWriter osw = new OutputStreamWriter(this.output);
-            BufferedWriter bw = new BufferedWriter(osw);
-            String s = "Hello world!";
-            String toSend = s + "\n";
-            bw.write(toSend);
-            bw.flush();
-            System.out.println(toSend);
+            while(true) {
+                Scanner scanner = new Scanner(System.in);
+                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(this.client.getOutputStream()));
+                String s = scanner.nextLine();
+                if(s.equals("shutdown")) {
+                    scanner.close();
+                    break;
+                }
+                String toSend = s + "\n";
+                bw.write(toSend);
+                bw.flush();
+            }
+            client.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
+
 }

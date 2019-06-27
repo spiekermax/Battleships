@@ -1,12 +1,18 @@
 package de.uni_hannover.hci.battleships.network;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class Server
 {
+    // port
     private int port;
+
+    // IP Adresse
+    private InetAddress ip;
 
     // Wir
     private ServerSocket server;
@@ -25,9 +31,22 @@ public class Server
             this.server = new ServerSocket(this.port);
             System.out.print("Server gestartet!\n");
             this.waitForConnection();
+            this.address();
             this.readIncomingMessages();
-            this.shutdown();
+            //this.shutdown();
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void address()
+    {
+        try {
+            this.ip = InetAddress.getLocalHost();
+            System.out.println("IP address : " + ip);
+            System.out.println("Port address : " + this.port );
+
+        } catch (UnknownHostException e) {
             e.printStackTrace();
         }
     }
@@ -39,20 +58,19 @@ public class Server
 
     private void readIncomingMessages() throws IOException
     {
-        boolean runServer = true;
+        try {
+            while (true) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+                String s = in.readLine();
+                if (s == null) break;
+                System.out.println("Message from Client: " + s);
+            }
+            this.client.close();
+            this.server.close();
 
-        while(runServer)
-        {
-            try {
-                //this.client = this.server.accept();
-                this.inputStream = client.getInputStream();
-                InputStreamReader isr = new InputStreamReader(inputStream);
-                BufferedReader br = new BufferedReader(isr);
-                String s = br.readLine();
-                System.out.println("Message from Client " + s);
-            } catch (IOException e) { runServer = false; }
+        }catch (IOException e) {
+            e.printStackTrace();
         }
-        this.shutdown();
     }
 
     private void shutdown() throws IOException
