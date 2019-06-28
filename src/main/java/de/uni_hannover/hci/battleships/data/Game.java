@@ -20,5 +20,6 @@ public class Game {
         //return p1.getMyBoard().validBoard() && p2.getMyBoard().validBoard(); //?
         return false;
     }
+
 }
 
