@@ -13,6 +13,7 @@
     <!-- Message view -->
     <AnchorPane VBox.vgrow="ALWAYS">
         <TextArea fx:id="_messageView" editable="false" focusTraversable="false" mouseTransparent="true"
+                  wrapText="true"
                   promptText="Der Anfang einer Unterhaltung mit deinem Gegner"
                   AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="4.0"/>
     </AnchorPane>
