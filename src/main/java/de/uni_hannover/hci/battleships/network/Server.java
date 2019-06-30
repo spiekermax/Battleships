@@ -84,7 +84,7 @@ public class Server
     {
         try
         {
-            while(true)
+            while(this.isRunning())
             {
                 BufferedReader inputStreamReader = new BufferedReader(new InputStreamReader(_connectedClient.getInputStream()));
                 String line = inputStreamReader.readLine();
