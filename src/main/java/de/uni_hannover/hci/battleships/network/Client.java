@@ -28,24 +28,25 @@ public class Client {
 
     public void sendMessages()
     {
-        try {
-            while(true) {
-                Scanner scanner = new Scanner(System.in);
-                BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(this.client.getOutputStream()));
-                String s = scanner.nextLine();
-                if(s.equals("shutdown")) {
-                    scanner.close();
-                    break;
+        new Thread(() -> {
+            try {
+                while(true) {
+                    Scanner scanner = new Scanner(System.in);
+                    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(this.client.getOutputStream()));
+                    String s = scanner.nextLine();
+                    if(s.equals("shutdown")) {
+                        scanner.close();
+                        break;
+                    }
+                    String toSend = s + "\n";
+                    bw.write(toSend);
+                    bw.flush();
                 }
-                String toSend = s + "\n";
-                bw.write(toSend);
-                bw.flush();
+                client.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            client.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        }).start();
     }
 
 }

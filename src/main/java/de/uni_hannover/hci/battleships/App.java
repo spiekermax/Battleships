@@ -3,6 +3,8 @@ package de.uni_hannover.hci.battleships;
 // Internal dependencies
 import de.uni_hannover.hci.battleships.network.Client;
 import de.uni_hannover.hci.battleships.network.Server;
+import de.uni_hannover.hci.battleships.ui.chat.ChatView;
+import de.uni_hannover.hci.battleships.ui.chat.event.ChatViewMessageConfirmedEvent;
 import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.NetworkConfigDialog;
 import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.event.NetworkConfigDialogResponseEvent;
 import de.uni_hannover.hci.battleships.util.resource.R;
@@ -52,11 +54,9 @@ public class App extends Application
             {
                 case HOST:
                     Server server = new Server(1896);
-                    System.out.println("User möchte hosten");
                     break;
                 case JOIN:
                     Client client = new Client(1896);
-                    System.out.println("User möchte joinen");
                     break;
                 case EXIT:
                     Platform.exit();
@@ -66,6 +66,15 @@ public class App extends Application
             }
         });
         networkConfigDialog.present();
+
+        // Handle Chat-Eingaben
+        ChatView chatView = (ChatView) root.lookup( R.id("chat") );
+        chatView.addEventHandler(ChatViewMessageConfirmedEvent.EVENT_TYPE, event ->
+        {
+            if(event.getMessage().trim().equals("")) return;
+
+            chatView.addMessage(null, event.getMessage());
+        });
     }
 
     public static void main(String[] args)
