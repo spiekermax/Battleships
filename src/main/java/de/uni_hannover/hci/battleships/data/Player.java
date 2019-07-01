@@ -36,15 +36,20 @@ public class Player {
      * @return Falls der Spieler verloren hat, wird true zurückgegeben.
      */
     public boolean hasLost() {
-        boolean lost = true;
         for(int i = 0; i < myShips.length; i++) {
-            if(!myShips[i].haveSunk) {
-                lost = false; break;
+            if(!myShips[i].haveSunk) {  //Wenn ein einziges Schiff noch nicht versunken ist
+                return false;
             }
         }
-        return lost;
+        return true;
     }
 
+    /**
+     * Diese Funktion prüft, ob das gegebene Schiff des Spielers versunken ist.
+     * Wenn dies stimmt, wird gleichzeitig das Attribut haveSunk des betroffenen Schiffes auf true gesetzt.
+     * @param s Das Schiff, welches geprüft werden soll, ob es komplett versunken ist
+     * @return Gibt ein boolean zurück, ob das Schiff versunken ist
+     */
     public boolean shipSank(Ship s) {
         for(int i = 0; i < s.coordinates.length; i++) {
             if(myBoard.board[s.coordinates[i][0]][s.coordinates[i][1]] != FieldMode.SANKED_SHIP) {
@@ -55,6 +60,12 @@ public class Player {
         return true;
     }
 
+    /**
+     * Diese Funktion prüft, ob der Spieler bei dem Gegner ein Schiff getroffen hat.
+     * @param x Die x Koordinate, wo der Spieler hingeschossen hat. Diese darf nicht über die boardgrenzen hinausgehen.
+     * @param y Die y Koordinate, wo der Spieler hingeschossen hat. Diese darf nicht über die boardgrenzen hinausgehen
+     * @return Es wird ein true zurückgegeben, falls der Spieler ein Schiff getroffen hat.
+     */
     public boolean hasShot(int x, int y) {
         if(!enemyBoard.outOfBounds(x,y)) {
             if(enemyBoard.board[x][y] == FieldMode.SHIP) {
@@ -67,10 +78,19 @@ public class Player {
         return false;
     }
 
+    /**
+     * Diese Funktion liest das bestehende eigene Board aus und erstellt die zugehörigen Schiffe.
+     * Die Funktion setzt nicht die Zustände auf dem Board.
+     */
     public void setMyShips() {
         myShips = myBoard.readBoard();
     }
 
+    /**
+     * Diese Funktion prüft, ob die angegebenen Schiffe des Spielers, den Spielregeln entsprechen.
+     * D.h. dass es die richtige Anzahl an Schiffen mit den jeweiligen richtigen Längen gibt.
+     * @return Gibt einen boolean zurück, ob dies stimmt.
+     */
     public boolean validShipConstellation() {
         int two = 0;
         int three = 0;

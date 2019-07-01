@@ -79,6 +79,14 @@ public class Board {
         return dir;
     }
 
+    /**
+     * Diese Funktion prüft, ob es von einem bestimmten Feld aus, daneben ein weiteres Schiff gibt.
+     * @param x Die x-Koordinate vom betrachtenden Feld
+     * @param y Die y-Koordinate vom betrachtenden Feld
+     * @param dx Die x-Richtung, die batrechtet werden soll
+     * @param dy Die y-Richtung, die betrachtet werden soll
+     * @return Gibt ein boolean zurück, ob es stimmt
+     */
     public boolean shipInDirection(int x, int y, int dx, int dy) {
         if(!outOfBounds(x,y) && !outOfBounds(x+dx, y+dy)) {
             if(this.board[x+dx][y+dy] == FieldMode.SHIP) {
@@ -88,29 +96,58 @@ public class Board {
         return false;
     }
 
+    /**
+     * Diese Funktion prüft, ob die angegebene Richtung gültig ist laut der Spielregeln.
+     * D.h. es darf keine diagonal platzsierten Schiffe auf dem board geben.
+     * @param dx x-Richtung
+     * @param dy y-Richtung
+     * @return Gibt ein boolean zurück, ob dies stimmt
+     */
     public boolean invalidDirection(int dx, int dy) {
         return dx == 0 && dy == 0 || dx == 1 && dy == 1 || dx == -1 && dy == -1
                 || dx == -1 && dy == 1 || dx == 1 && dy == -1;
     }
 
+    /**
+     * Diese Funktion prüft, ob die Schiffe auf dem Board in der richtigen Richtung gesetzt wurden.
+     * D.h. wenn es Schiffe gibt, welche diagonal oder um Eck liegen bzw. direkt angrenzende Schiffe haben,
+     * kann das Spielbrett verworfen werden.
+     * @param x Die x-Koordinate, von der das Schiff geprüft wird
+     * @param y Die y-Koordinate, von der das Schiff geprüft wird
+     * @return Gibt ein integer-array aus, wo die x und y Richtungen beschrieben sind.
+     * Ist etwas ungültig, so wird null ausgegeben.
+     */
     public int[] testIfDirectionExists(int x, int y) {
+        int directionCount = 0; //Zählt Anzahl der Richtungen von dem Feld aus, in die ein Schiff existiert
+        int[] result = new int[2];  //Speichert die Richtung, in der ein Schiff existiert
         int[][] directions = getAllPossibleDirections();
         int dx = 0; int dy = 0;
-        for(int i = 0; i < directions.length; i++) {
+
+        for(int i = 0; i < directions.length; i++) {    //Läuft über alle möglichen Richtungen
             dx = directions[i][0]; dy = directions[i][1];
-            if (shipInDirection(x, y, dx, dy)) {
-                if(invalidDirection(dx,dy)) {
+            if (shipInDirection(x, y, dx, dy)) {    //Prüft, ob in der Richtung ein Schiff liegt
+                if(invalidDirection(dx,dy) || directionCount > 0) { //Wenn ja, dann prüft, ob ungülitge Richtung ist bzw. es mehr als eine richtige Richtung gibt (Schiff um Eck gebaut?)
                     System.err.printf("Es gibt ungültige Schiffe");
                 } else {
-                    int[] result = new int[2];
-                    result[0] = dx; result[1] = dy;   //Wichtig für mich: Hat nicht getestet, ob um eck gebaut ist
-                    return result;  //Außerdem sollten directions nur in rechte richtung und unten gehen, habe aber bisher alle drin
+                    directionCount++;
+                    result[0] = dx; result[1] = dy;  //Außerdem sollten directions nur in rechte richtung und unten gehen, habe aber bisher alle drin
                 }
+            }
+            if(i == directions.length - 1 && directionCount == 1) { //Wenn es nur eine Richtung gibt und alle Richtungen schon durchlaufen
+                return result;
             }
         }
        return null;
     }
 
+    /**
+     * Diese Funktion zählt die Länge eines Schiffes von einem Feld aus in eine bestimmte Richtung.
+     * @param x Die x-Koordinate, wo das Schiff beginnt
+     * @param y Die y-Koordinate, wo das Schiff beginnt
+     * @param dx Die x-Richtung, in der das Schiff liegt
+     * @param dy Die y-Richtung, in der das Schiff liegt
+     * @return Es wird die Länge des Schiffes zurückgegeben.
+     */
     public int countLength(int x, int y, int dx, int dy) {
         int result = 0;
         for(int i = 0; !outOfBounds(x,y) && !outOfBounds(x+i*dx, y+i*dy); i++) {
@@ -121,6 +158,32 @@ public class Board {
         return result;
     }
 
+    /**
+     * Diese Funktion prüft, ob es das angegebene Feld, bereits von Schiffen besetzt ist.
+     * @param ships Ein Array von Schiffen, welches durchlaufen wird um zu testen,
+     *              ob eines der dort existierendes Schiffe bereits auf dem Feld steht.
+     * @param x Die x-Koordinate des betrachteten Felds
+     * @param y Die y-Koordinate des betrachteten Felds
+     * @return Gibt ein boolean zurück, ob bereits ein Schiff auf dem Feld definiert ist
+     */
+    public boolean shipExists(Ship[] ships, int x, int y) {
+        for(int i = 0; i < ships.length; i++) {
+            if(ships[i] != null) {
+                for(int j = 0; j < ships[i].coordinates.length; j++) {
+                    if (ships[i].coordinates[j][0] == x || ships[i].coordinates[j][1] == y) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Diese Funktion liest ein Board aus und prüft, ob die gesetzten Schiffe auf diesem den Regeln entsprechen.
+     * @return Es wird ein Array von ausgelesenen Schiffen zurückgegeben.
+     * Wenn zu viele Schiffe markiert wurden oder etwas anderes nicht stimmt, wird null zurpckgegeben.
+     */
     public Ship[] readBoard() {
         int index = 0;
         Ship[] ships = new Ship[10];
@@ -129,15 +192,22 @@ public class Board {
             for(int j = 0; j < this.getWidth(); j++) {
                 if (board[j][i] == FieldMode.SHIP) {
                     direction = this.testIfDirectionExists(j,i);
-                    if(direction != null /*&& !shipExists(ships, j, i)*/) {    //So lange kein Schiff bisher existiert, wie realisere ich?
+                    if(direction != null && !shipExists(ships, j, i)) {    //So lange kein Schiff bisher existiert && Richtung existiert
                         //Erstelle neues Schiff mit der Länge in die Richtung
-                        int lengthOfShip = countLength(j, i, direction[0], direction[1]);
-                        ships[index] = new Ship(lengthOfShip);
-                        index++;
+                        if(index < 10) {    //Nur so lange das Array nicht voll ist
+                            int lengthOfShip = countLength(j, i, direction[0], direction[1]);
+                            ships[index] = new Ship(lengthOfShip);
+                            index++;
+                        } else {
+                            index++;
+                        }
                     }
                 }
             }
+            if(i == this.getHeight()- 1 && index == 9) {    //Nur wenn es genau 10 Schiffe auf Feld gab
+                return ships;
+            }
         }
-        return ships;
+        return null;
     }
 }
