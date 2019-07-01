@@ -2,6 +2,7 @@ package de.uni_hannover.hci.battleships;
 
 // Internal dependencies
 import de.uni_hannover.hci.battleships.network.Client;
+import de.uni_hannover.hci.battleships.network.NetworkInterface;
 import de.uni_hannover.hci.battleships.network.Server;
 import de.uni_hannover.hci.battleships.ui.chat.ChatView;
 import de.uni_hannover.hci.battleships.ui.chat.event.ChatViewMessageConfirmedEvent;
@@ -32,6 +33,11 @@ public class App extends Application
     private static final int MIN_WINDOW_HEIGHT = 300;
 
 
+    /* ATTRIBUTES */
+
+    private NetworkInterface _networkInterface;
+
+
     /* LIFECYCLE */
 
     @Override
@@ -56,7 +62,7 @@ public class App extends Application
                     Server server = new Server(1896);
                     break;
                 case JOIN:
-                    Client client = new Client(1896);
+                    this._networkInterface = new Client(1896);
                     break;
                 case EXIT:
                     Platform.exit();
@@ -73,6 +79,7 @@ public class App extends Application
         {
             if(event.getMessage().trim().equals("")) return;
 
+            this._networkInterface.sendMessage(event.getMessage());
             chatView.addMessage(null, event.getMessage());
         });
     }

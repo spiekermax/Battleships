@@ -3,7 +3,6 @@ package de.uni_hannover.hci.battleships.network;
 // Java
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -21,7 +20,7 @@ public class Server
     private ServerSocket _serverSocket;
     private Socket _connectedClient;
 
-    private InputStream _inputStream;
+    private BufferedReader _inputStreamReader;
 
 
     /* LIFECYCLE */
@@ -36,7 +35,7 @@ public class Server
 
         try
         {
-            this._serverSocket = new ServerSocket(this._port);
+            this._serverSocket = new ServerSocket(this.getPort());
         }
         catch(IOException e)
         {
@@ -59,7 +58,9 @@ public class Server
         {
             try
             {
-                this._connectedClient = this._serverSocket.accept();
+                this._connectedClient = this.getServerSocket().accept();
+                this._inputStreamReader = new BufferedReader(new InputStreamReader(this.getConnectedClient().getInputStream()));
+
                 this.runFetchLoop();
             }
             catch(IOException e)
@@ -86,8 +87,7 @@ public class Server
         {
             while(this.isRunning())
             {
-                BufferedReader inputStreamReader = new BufferedReader(new InputStreamReader(_connectedClient.getInputStream()));
-                String line = inputStreamReader.readLine();
+                String line = this.getInputStreamReader().readLine();
 
                 if(line != null)
                 {
@@ -110,9 +110,8 @@ public class Server
     {
         try
         {
-            this._inputStream.close();
-            this._connectedClient.close();
-            this._serverSocket.close();
+            this.getConnectedClient().close();
+            this.getServerSocket().close();
         }
         catch(IOException e)
         {
@@ -173,5 +172,32 @@ public class Server
     private void setIsRunning(boolean newIsRunning)
     {
         this._isRunning = newIsRunning;
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    private ServerSocket getServerSocket()
+    {
+        return this._serverSocket;
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    private Socket getConnectedClient()
+    {
+        return this._connectedClient;
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    private BufferedReader getInputStreamReader()
+    {
+        return this._inputStreamReader;
     }
 }
