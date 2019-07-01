@@ -61,18 +61,18 @@ public class Player {
     }
 
     /**
-     * Diese Funktion prüft, ob der Spieler bei dem Gegner ein Schiff getroffen hat.
-     * @param x Die x Koordinate, wo der Spieler hingeschossen hat. Diese darf nicht über die boardgrenzen hinausgehen.
-     * @param y Die y Koordinate, wo der Spieler hingeschossen hat. Diese darf nicht über die boardgrenzen hinausgehen
-     * @return Es wird ein true zurückgegeben, falls der Spieler ein Schiff getroffen hat.
+     * Diese Funktion prüft, ob ein Schiff des Spielers getroffen wurde
+     * @param x Die x Koordinate, wo der Gegner hingeschossen hat. Diese darf nicht über die boardgrenzen hinausgehen.
+     * @param y Die y Koordinate, wo der Gegner hingeschossen hat. Diese darf nicht über die boardgrenzen hinausgehen
+     * @return Es wird ein true zurückgegeben, falls der Gegner ein Schiff getroffen hat.
      */
-    public boolean hasShot(int x, int y) {
-        if(!enemyBoard.outOfBounds(x,y)) {
-            if(enemyBoard.board[x][y] == FieldMode.SHIP) {
-                enemyBoard.board[x][y] = FieldMode.SANKED_SHIP;
+    public boolean hasBeenShot(int x, int y) {
+        if(!myBoard.outOfBounds(x,y)) {
+            if(myBoard.board[x][y] == FieldMode.SHIP) {
+                myBoard.board[x][y] = FieldMode.SANKED_SHIP;
                 return true;
-            } else if(enemyBoard.board[x][y] == FieldMode.OCEAN){
-                enemyBoard.board[x][y] = FieldMode.SHOT;
+            } else if(myBoard.board[x][y] == FieldMode.OCEAN){
+                myBoard.board[x][y] = FieldMode.SHOT;
             }
         }
         return false;
