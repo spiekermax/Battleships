@@ -1,16 +1,14 @@
 package de.uni_hannover.hci.battleships.network;
 
 // Java
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 
-public class Server
+public class Server implements NetworkInterface
 {
     /* ATTRIBUTES */
 
@@ -21,6 +19,7 @@ public class Server
     private Socket _connectedClient;
 
     private BufferedReader _inputStreamReader;
+    private BufferedWriter _outputStreamWriter;
 
 
     /* LIFECYCLE */
@@ -51,6 +50,24 @@ public class Server
 
     /**
      * TODO
+     * @param message
+     */
+    public void sendMessage(String message)
+    {
+        try
+        {
+            this._outputStreamWriter.write(message + "\n");
+            this._outputStreamWriter.flush();
+        }
+        catch(IOException e)
+        {
+            // TODO: Besseres ERROR-Handling
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * TODO
      */
     private void acceptConnections()
     {
@@ -60,6 +77,7 @@ public class Server
             {
                 this._connectedClient = this.getServerSocket().accept();
                 this._inputStreamReader = new BufferedReader(new InputStreamReader(this.getConnectedClient().getInputStream()));
+                this._outputStreamWriter = new BufferedWriter(new OutputStreamWriter(this.getConnectedClient().getOutputStream()));
 
                 this.runFetchLoop();
             }

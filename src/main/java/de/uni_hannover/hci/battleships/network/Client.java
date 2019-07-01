@@ -1,9 +1,7 @@
 package de.uni_hannover.hci.battleships.network;
 
 // Java
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -18,6 +16,7 @@ public class Client implements NetworkInterface
 
     private Socket _client;
 
+    private BufferedReader _inputStreamReader;
     private BufferedWriter _outputStreamWriter;
 
 
@@ -34,6 +33,7 @@ public class Client implements NetworkInterface
         try
         {
             this._client = new Socket("localhost", this.getPort());
+            this._inputStreamReader = new BufferedReader(new InputStreamReader(this.getClient().getInputStream()));
             this._outputStreamWriter = new BufferedWriter(new OutputStreamWriter(this.getClient().getOutputStream()));
         }
         catch(IOException e)
@@ -72,13 +72,19 @@ public class Client implements NetworkInterface
      */
     private void runFetchLoop()
     {
-        /*Thread thread = new Thread(() ->
+        Thread thread = new Thread(() ->
         {
             try
             {
                 while(this.isRunning())
                 {
-                    // Read
+                    String line = this._inputStreamReader.readLine();
+
+                    if(line != null)
+                    {
+                        // Fire event here
+                        System.out.println("Message from Server: " + line);
+                    }
                 }
             }
             catch(IOException e)
@@ -93,7 +99,7 @@ public class Client implements NetworkInterface
         });
 
         thread.setDaemon(true);
-        thread.start();*/
+        thread.start();
     }
 
     /**

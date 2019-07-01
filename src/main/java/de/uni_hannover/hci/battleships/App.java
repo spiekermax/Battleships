@@ -59,7 +59,7 @@ public class App extends Application
             switch(event.getConfig())
             {
                 case HOST:
-                    Server server = new Server(1896);
+                    this._networkInterface = new Server(1896);
                     break;
                 case JOIN:
                     this._networkInterface = new Client(1896);
