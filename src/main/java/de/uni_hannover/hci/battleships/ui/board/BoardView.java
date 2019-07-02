@@ -1,11 +1,12 @@
 package de.uni_hannover.hci.battleships.ui.board;
 
 // Internal dependencies
-import de.uni_hannover.hci.battleships.util.resource.R;
+import de.uni_hannover.hci.battleships.data.Board;
 import de.uni_hannover.hci.battleships.ui.board.cell.BoardViewCell;
 import de.uni_hannover.hci.battleships.ui.board.cell.BoardViewCellColor;
 import de.uni_hannover.hci.battleships.ui.board.event.BoardViewCellClickedEvent;
 import de.uni_hannover.hci.battleships.util.Vector2i;
+import de.uni_hannover.hci.battleships.util.resource.R;
 
 // Java
 import java.io.IOException;
@@ -151,6 +152,40 @@ public class BoardView extends GridPane
 
 
     /* METHODS */
+
+    /**
+     * TODO
+     * @param board
+     */
+    public void display(Board board)
+    {
+        for(int y = 0; y < BOARD_SIZE; ++y)
+        {
+            for(int x = 0; x < BOARD_SIZE; ++x)
+            {
+                if(this.getCell(x, y) == null)
+                {
+                    throw new IndexOutOfBoundsException("ERROR: BoardView.display(): Board cell at " + new Vector2i(x ,y) + "does not exist!");
+                }
+
+                switch(board.getField(x, y))
+                {
+                    case OCEAN:
+                        this.getCell(x, y).setDefaultColor(BoardViewCellColor.WATER);
+                        break;
+                    case SHIP:
+                        this.getCell(x, y).setDefaultColor(BoardViewCellColor.SHIP);
+                        break;
+                    case SANKED_SHIP: // <- Bitte, bitte Grammatikfehler korregieren :/
+                        this.getCell(x, y).setDefaultColor(BoardViewCellColor.HIT);
+                        break;
+                    case SHOT:
+                        this.getCell(x, y).setDefaultColor(BoardViewCellColor.MISS);
+                        break;
+                }
+            }
+        }
+    }
 
     /**
      * TODO
