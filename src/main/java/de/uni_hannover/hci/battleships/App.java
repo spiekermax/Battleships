@@ -79,7 +79,7 @@ public class App extends Application
         {
             if(event.getMessage().trim().equals("")) return;
 
-            this._networkSocket.sendMessage(event.getMessage());
+            this.getNetworkSocket().sendMessage(event.getMessage());
             chatView.addMessage(null, event.getMessage());
         });
     }
@@ -87,5 +87,13 @@ public class App extends Application
     public static void main(String[] args)
     {
         App.launch(args);
+    }
+
+
+    /* GETTERS & SETTERS */
+
+    private NetworkSocket getNetworkSocket()
+    {
+        return this._networkSocket;
     }
 }
