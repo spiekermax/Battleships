@@ -1,22 +1,23 @@
-package de.uni_hannover.hci.battleships.network;
+package de.uni_hannover.hci.battleships.network.socket;
+
+// Internal dependencies
+import de.uni_hannover.hci.battleships.network.NetworkSocket;
 
 // Java
 import java.io.*;
 import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
 
-public class Server implements NetworkInterface
+public class Client implements NetworkSocket
 {
     /* ATTRIBUTES */
 
-    private int _port;
     private boolean _isRunning = false;
 
-    private ServerSocket _serverSocket;
-    private Socket _connectedClient;
+    private int _port;
+    private Socket _socket;
 
     private BufferedReader _inputStreamReader;
     private BufferedWriter _outputStreamWriter;
@@ -28,21 +29,24 @@ public class Server implements NetworkInterface
      * TODO
      * @param port
      */
-    public Server(int port)
+    public Client(int port)
     {
         this._port = port;
 
         try
         {
-            this._serverSocket = new ServerSocket(this.getPort());
+            this._socket = new Socket("localhost", this.getPort());
+            this._inputStreamReader = new BufferedReader(new InputStreamReader(this.getSocket().getInputStream()));
+            this._outputStreamWriter = new BufferedWriter(new OutputStreamWriter(this.getSocket().getOutputStream()));
+
+            this.setIsRunning(true);
+            this.runFetchLoop();
         }
         catch(IOException e)
         {
+            // TODO: Besseres ERROR-Handling
             e.printStackTrace();
         }
-
-        this.setIsRunning(true);
-        this.acceptConnections();
     }
 
 
@@ -56,8 +60,8 @@ public class Server implements NetworkInterface
     {
         try
         {
-            this._outputStreamWriter.write(message + "\n");
-            this._outputStreamWriter.flush();
+            this.getOutputStreamWriter().write(message + "\n");
+            this.getOutputStreamWriter().flush();
         }
         catch(IOException e)
         {
@@ -69,17 +73,22 @@ public class Server implements NetworkInterface
     /**
      * TODO
      */
-    private void acceptConnections()
+    private void runFetchLoop()
     {
         Thread thread = new Thread(() ->
         {
             try
             {
-                this._connectedClient = this.getServerSocket().accept();
-                this._inputStreamReader = new BufferedReader(new InputStreamReader(this.getConnectedClient().getInputStream()));
-                this._outputStreamWriter = new BufferedWriter(new OutputStreamWriter(this.getConnectedClient().getOutputStream()));
+                while(this.isRunning())
+                {
+                    String fetchedString = this.getInputStreamReader().readLine();
 
-                this.runFetchLoop();
+                    if(fetchedString != null)
+                    {
+                        // Fire event here
+                        System.out.println("Message from Server: " + fetchedString);
+                    }
+                }
             }
             catch(IOException e)
             {
@@ -99,37 +108,11 @@ public class Server implements NetworkInterface
     /**
      * TODO
      */
-    private void runFetchLoop()
-    {
-        try
-        {
-            while(this.isRunning())
-            {
-                String line = this.getInputStreamReader().readLine();
-
-                if(line != null)
-                {
-                    // Fire event here
-                    System.out.println("Message from Client: " + line);
-                }
-            }
-        }
-        catch(IOException e)
-        {
-            // TODO: Besseres ERROR-Handling
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * TODO
-     */
     private void shutdown()
     {
         try
         {
-            this.getConnectedClient().close();
-            this.getServerSocket().close();
+            this.getSocket().close();
         }
         catch(IOException e)
         {
@@ -140,16 +123,6 @@ public class Server implements NetworkInterface
         {
             this.setIsRunning(false);
         }
-    }
-
-    public void sendString(String message)
-    {
-        // Soll den String an verbundenen Client senden.
-    }
-
-    public void sendGameState(/* Irgendein Objekt, dass den Spielstand beinhaltet */)
-    {
-        // Soll den Spielstand an verbundenen Client senden.
     }
 
 
@@ -196,18 +169,9 @@ public class Server implements NetworkInterface
      * TODO
      * @return
      */
-    private ServerSocket getServerSocket()
+    private Socket getSocket()
     {
-        return this._serverSocket;
-    }
-
-    /**
-     * TODO
-     * @return
-     */
-    private Socket getConnectedClient()
-    {
-        return this._connectedClient;
+        return this._socket;
     }
 
     /**
@@ -217,5 +181,14 @@ public class Server implements NetworkInterface
     private BufferedReader getInputStreamReader()
     {
         return this._inputStreamReader;
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    private BufferedWriter getOutputStreamWriter()
+    {
+        return this._outputStreamWriter;
     }
 }

@@ -1,9 +1,9 @@
 package de.uni_hannover.hci.battleships;
 
 // Internal dependencies
-import de.uni_hannover.hci.battleships.network.Client;
-import de.uni_hannover.hci.battleships.network.NetworkInterface;
-import de.uni_hannover.hci.battleships.network.Server;
+import de.uni_hannover.hci.battleships.network.NetworkSocket;
+import de.uni_hannover.hci.battleships.network.socket.Client;
+import de.uni_hannover.hci.battleships.network.socket.Server;
 import de.uni_hannover.hci.battleships.ui.chat.ChatView;
 import de.uni_hannover.hci.battleships.ui.chat.event.ChatViewMessageConfirmedEvent;
 import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.NetworkConfigDialog;
@@ -35,7 +35,7 @@ public class App extends Application
 
     /* ATTRIBUTES */
 
-    private NetworkInterface _networkInterface;
+    private NetworkSocket _networkSocket;
 
 
     /* LIFECYCLE */
@@ -59,10 +59,10 @@ public class App extends Application
             switch(event.getConfig())
             {
                 case HOST:
-                    this._networkInterface = new Server(1896);
+                    this._networkSocket = new Server(1896);
                     break;
                 case JOIN:
-                    this._networkInterface = new Client(1896);
+                    this._networkSocket = new Client(1896);
                     break;
                 case EXIT:
                     Platform.exit();
@@ -79,7 +79,7 @@ public class App extends Application
         {
             if(event.getMessage().trim().equals("")) return;
 
-            this._networkInterface.sendMessage(event.getMessage());
+            this._networkSocket.sendMessage(event.getMessage());
             chatView.addMessage(null, event.getMessage());
         });
     }

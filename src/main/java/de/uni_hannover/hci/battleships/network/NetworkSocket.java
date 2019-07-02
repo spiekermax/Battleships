@@ -1,7 +1,7 @@
 package de.uni_hannover.hci.battleships.network;
 
 
-public interface NetworkInterface
+public interface NetworkSocket
 {
     /**
      * TODO
