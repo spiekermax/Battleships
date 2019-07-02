@@ -29,6 +29,8 @@ public class BoardView extends GridPane
 
     /* ATTRIBUTES */
 
+    private boolean _shipsVisible = true;
+
     private BoardViewCell _lastMouseTargetCell;
 
 
@@ -174,7 +176,10 @@ public class BoardView extends GridPane
                         this.getCell(x, y).setDefaultColor(BoardViewCellColor.WATER);
                         break;
                     case SHIP:
-                        this.getCell(x, y).setDefaultColor(BoardViewCellColor.SHIP);
+                        if(this.getShipsVisible())
+                            this.getCell(x, y).setDefaultColor(BoardViewCellColor.SHIP);
+                        else
+                            this.getCell(x, y).setDefaultColor(BoardViewCellColor.WATER);
                         break;
                     case SANKED_SHIP: // <- Bitte, bitte Grammatikfehler korregieren :/
                         this.getCell(x, y).setDefaultColor(BoardViewCellColor.HIT);
@@ -236,6 +241,24 @@ public class BoardView extends GridPane
     private BoardViewCell getCell(Vector2i coords)
     {
         return this.getCell(coords.getX(), coords.getY());
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    public boolean getShipsVisible()
+    {
+        return this._shipsVisible;
+    }
+
+    /**
+     * TODO
+     * @param newShipsVisible
+     */
+    public void setShipsVisible(boolean newShipsVisible)
+    {
+        this._shipsVisible = newShipsVisible;
     }
 
     /**
