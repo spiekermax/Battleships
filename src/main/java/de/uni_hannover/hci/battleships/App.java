@@ -7,7 +7,6 @@ import de.uni_hannover.hci.battleships.network.socket.Server;
 import de.uni_hannover.hci.battleships.ui.chat.ChatView;
 import de.uni_hannover.hci.battleships.ui.chat.event.ChatViewMessageConfirmedEvent;
 import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.NetworkConfigDialog;
-import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.event.NetworkConfigDialogResponseEvent;
 import de.uni_hannover.hci.battleships.util.resource.R;
 
 // Java
@@ -54,24 +53,21 @@ public class App extends Application
 
         // Ermittle gewünschte Netzwerkkonfiguration
         NetworkConfigDialog networkConfigDialog = new NetworkConfigDialog();
-        networkConfigDialog.getEventTarget().addEventHandler(NetworkConfigDialogResponseEvent.EVENT_TYPE, event ->
+        networkConfigDialog.showAndWait().ifPresent(networkConfig ->
         {
-            switch(event.getConfig())
+            switch(networkConfig.getSocketType())
             {
-                case HOST:
+                case SERVER:
                     this._networkSocket = new Server(1896);
                     break;
-                case JOIN:
+                case CLIENT:
                     this._networkSocket = new Client(1896);
                     break;
-                case EXIT:
+                case INVALID:
                     Platform.exit();
                     System.exit(0);
-                default:
-                    throw new IllegalArgumentException("ERROR: App.start(): Illegal user response!");
             }
         });
-        networkConfigDialog.present();
 
         // Handle Chat-Eingaben
         ChatView chatView = (ChatView) root.lookup( R.id("chat") );
