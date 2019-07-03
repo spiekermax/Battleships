@@ -59,37 +59,35 @@ public class Board {
         return !(x >= 0 && x < board.length && y >= 0 && y < board[0].length);
     }
 
-    /**
-     * Diese Methode prüft, ob das Spielfeld eine gültige Besetzung von Schiffen hat.
-     * Die Schiffe dürfen nicht über Eck, diagonal oder unmittelbar nebeneinander gebaut sein.
-     * @return Ist das Spielfeld gülzig, so wird true zurückgegeben.
-     */
-    public boolean validBoard() {
+    public boolean isShipOnField(int x, int y) {
+        if(!outOfBounds(x,y) && board[x][y] == FieldMode.SHIP) {
+            return true;
+        }
         return false;
     }
 
     public int[][] getAllPossibleDirections() {
-        //int[][] dir = new int[8][2];
         int[][] dir = {
-                {1,1}, {-1, -1},
+                {1,1}, {-1,-1},
                 {-1,1}, {1,-1},
                 {1,0}, {0,1},
-                {-1,0}, {0, -1}
+                {-1,0}, {0,-1}
         };
         return dir;
     }
 
-    /**
-     * Diese Funktion prüft, ob es von einem bestimmten Feld aus, daneben ein weiteres Schiff gibt.
-     * @param x Die x-Koordinate vom betrachtenden Feld
-     * @param y Die y-Koordinate vom betrachtenden Feld
-     * @param dx Die x-Richtung, die batrechtet werden soll
-     * @param dy Die y-Richtung, die betrachtet werden soll
-     * @return Gibt ein boolean zurück, ob es stimmt
-     */
-    public boolean shipInDirection(int x, int y, int dx, int dy) {
-        if(!outOfBounds(x,y) && !outOfBounds(x+dx, y+dy)) {
-            if(this.board[x+dx][y+dy] == FieldMode.SHIP) {
+    public boolean coordinatesOutOfBounds(int[][] cor) {
+        for(int i = 0; i < cor.length; i++) {
+            if(outOfBounds(cor[i][0], cor[i][1])){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isElementOfCoordinates(int[][] cor, int x, int y) {
+        for(int i = 0; i < cor.length; i++) {
+            if(x == cor[i][0] && y == cor[i][1]) {
                 return true;
             }
         }
@@ -97,117 +95,112 @@ public class Board {
     }
 
     /**
-     * Diese Funktion prüft, ob die angegebene Richtung gültig ist laut der Spielregeln.
-     * D.h. es darf keine diagonal platzsierten Schiffe auf dem board geben.
-     * @param dx x-Richtung
-     * @param dy y-Richtung
-     * @return Gibt ein boolean zurück, ob dies stimmt
+     * Diese Funktion prüft, ob ein Schiff bzw dessen Koordinaten benachbarte Schiffe haben.
+     * Ist eine Koordinate nicht im Feld, so wird diese nicht beachtet und übersprungen.
+     * @param cor Die Koordinaten des Schiffes
+     * @param dir Die Richtung in der die Schiffe gebaut sind
+     * @return Gibt true zurück, falls ein Schiff keine Nachbarn hat.
      */
-    public boolean invalidDirection(int dx, int dy) {
-        return dx == 0 && dy == 0 || dx == 1 && dy == 1 || dx == -1 && dy == -1
-                || dx == -1 && dy == 1 || dx == 1 && dy == -1;
-    }
-
-    /**
-     * Diese Funktion prüft, ob die Schiffe auf dem Board in der richtigen Richtung gesetzt wurden.
-     * D.h. wenn es Schiffe gibt, welche diagonal oder um Eck liegen bzw. direkt angrenzende Schiffe haben,
-     * kann das Spielbrett verworfen werden.
-     * @param x Die x-Koordinate, von der das Schiff geprüft wird
-     * @param y Die y-Koordinate, von der das Schiff geprüft wird
-     * @return Gibt ein integer-array aus, wo die x und y Richtungen beschrieben sind.
-     * Ist etwas ungültig, so wird null ausgegeben.
-     */
-    public int[] testIfDirectionExists(int x, int y) {
-        int directionCount = 0; //Zählt Anzahl der Richtungen von dem Feld aus, in die ein Schiff existiert
-        int[] result = new int[2];  //Speichert die Richtung, in der ein Schiff existiert
-        int[][] directions = getAllPossibleDirections();
-        int dx = 0; int dy = 0;
-
-        for(int i = 0; i < directions.length; i++) {    //Läuft über alle möglichen Richtungen
-            dx = directions[i][0]; dy = directions[i][1];
-            if (shipInDirection(x, y, dx, dy)) {    //Prüft, ob in der Richtung ein Schiff liegt
-                if(invalidDirection(dx,dy) || directionCount > 0) { //Wenn ja, dann prüft, ob ungülitge Richtung ist bzw. es mehr als eine richtige Richtung gibt (Schiff um Eck gebaut?)
-                    System.err.printf("Es gibt ungültige Schiffe");
-                } else {
-                    directionCount++;
-                    result[0] = dx; result[1] = dy;  //Außerdem sollten directions nur in rechte richtung und unten gehen, habe aber bisher alle drin
-                }
-            }
-            if(i == directions.length - 1 && directionCount == 1) { //Wenn es nur eine Richtung gibt und alle Richtungen schon durchlaufen
-                return result;
-            }
-        }
-       return null;
-    }
-
-    /**
-     * Diese Funktion zählt die Länge eines Schiffes von einem Feld aus in eine bestimmte Richtung.
-     * @param x Die x-Koordinate, wo das Schiff beginnt
-     * @param y Die y-Koordinate, wo das Schiff beginnt
-     * @param dx Die x-Richtung, in der das Schiff liegt
-     * @param dy Die y-Richtung, in der das Schiff liegt
-     * @return Es wird die Länge des Schiffes zurückgegeben.
-     */
-    public int countLength(int x, int y, int dx, int dy) {
-        int result = 0;
-        for(int i = 0; !outOfBounds(x,y) && !outOfBounds(x+i*dx, y+i*dy); i++) {
-            if(board[x+i*dx][y+i*dy] == FieldMode.SHIP) {
-                result++;
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Diese Funktion prüft, ob es das angegebene Feld, bereits von Schiffen besetzt ist.
-     * @param ships Ein Array von Schiffen, welches durchlaufen wird um zu testen,
-     *              ob eines der dort existierendes Schiffe bereits auf dem Feld steht.
-     * @param x Die x-Koordinate des betrachteten Felds
-     * @param y Die y-Koordinate des betrachteten Felds
-     * @return Gibt ein boolean zurück, ob bereits ein Schiff auf dem Feld definiert ist
-     */
-    public boolean shipExists(Ship[] ships, int x, int y) {
-        for(int i = 0; i < ships.length; i++) {
-            if(ships[i] != null) {
-                for(int j = 0; j < ships[i].coordinates.length; j++) {
-                    if (ships[i].coordinates[j][0] == x || ships[i].coordinates[j][1] == y) {
+    public boolean hasNoNeighbours(int[][] cor, int[] dir) {
+        int[][] possible = getAllPossibleDirections();
+        int x = -1; int y = -1;
+        for(int i = 0; i < cor.length; i++) {
+            x = cor[i][0]; y = cor[i][1];
+            if(outOfBounds(x,y)) {continue;}
+            for(int j = 0; j < possible.length; j++) {  //Läuft für jede Koordinate alle Richtungen ab
+                if(possible[j][0] == dir[0] && possible[i][1] == dir[1]) {
+                    if(isElementOfCoordinates(cor,
+                            cor[i][0]+possible[j][0],
+                            cor[i][1]+possible[j][1])) {  //Wenn Schiff(Koordinaten) in die Richtung geht, überspringe
+                        continue;
+                    } else if(board[cor[i][0]+possible[j][0]] [cor[i][1]+possible[j][1]]
+                            == FieldMode.SHIP){ //Falls Schiff nicht in eigener Richtung, muss prüfen, ob in dieser Richtung ein fremdes Schiff steht
                         return false;
                     }
+                }
+                if(i > 0) { //Wenn mind. 2. Knoten des Schiffes
+                    int dirxr = dir[0] * -1;
+                    int diryr = dir[1] * -1;
+                    if(possible[j][0] == dirxr && possible[i][1] == diryr) {  //Soll nicht mehr rückwärts betrachten von der Richtung des eigenen Schiffes
+                        continue;
+                    }
+                }
+                if(isShipOnField(cor[i][0]+possible[j][0], cor[i][1]+ possible[j][1])) { //Wenn umliegendes Schiff vorhanden
+                    return false;
                 }
             }
         }
         return true;
     }
 
-    /**
-     * Diese Funktion liest ein Board aus und prüft, ob die gesetzten Schiffe auf diesem den Regeln entsprechen.
-     * @return Es wird ein Array von ausgelesenen Schiffen zurückgegeben.
-     * Wenn zu viele Schiffe markiert wurden oder etwas anderes nicht stimmt, wird null zurpckgegeben.
-     */
-    public Ship[] readBoard() {
-        int index = 0;
-        Ship[] ships = new Ship[10];
-        int[] direction;
-        for(int i = 0; i < this.getHeight(); i++) {
-            for(int j = 0; j < this.getWidth(); j++) {
-                if (board[j][i] == FieldMode.SHIP) {
-                    direction = this.testIfDirectionExists(j,i);
-                    if(direction != null && !shipExists(ships, j, i)) {    //So lange kein Schiff bisher existiert && Richtung existiert
-                        //Erstelle neues Schiff mit der Länge in die Richtung
-                        if(index < 10) {    //Nur so lange das Array nicht voll ist
-                            int lengthOfShip = countLength(j, i, direction[0], direction[1]);
-                            ships[index] = new Ship(lengthOfShip);
-                            index++;
-                        } else {
-                            index++;
-                        }
-                    }
+
+    //Die Funktion prüft, ob es zwischen den Koordinaten jeweils immer nur eine Richtung gibt
+    public boolean onlyOneDirection(int[][] cor) {
+        if(cor.length <= 1) {return false;}
+        int dx = 0; int dy = 0;
+        for(int i = 0; i < cor.length; i++) {
+            if(i == 1) {    //Erste Richtung gespeichert
+                dx = cor[i][0] - cor[i-1][0];
+                dy = cor[i][1] - cor[i-1][1];
+            } else if(i > 1){   //Prüft, ob alle Folgenden auch immer dieselbe sind
+                if(dx != cor[i][0] - cor[i-1][0]
+                        || dy != cor[i][1] - cor[i-1][1]) {
+                    return false;
                 }
             }
-            if(i == this.getHeight()- 1 && index == 9) {    //Nur wenn es genau 10 Schiffe auf Feld gab
-                return ships;
+        }
+        return true;
+    }
+
+    //Diese Fkt. gibt die Differenz zweier Koordinaten aus.
+    // Sie prüft nicht, ob diese überhaupt existieren.
+    public int[] getDirection(int[][]cor) {
+        int[] dir = new int[2];
+        dir[0] = cor[1][0] - cor[0][0];
+        dir[1] = cor[1][1] - cor[0][1];
+        return dir;
+    }
+
+    /**
+     * Diese Funktion prüft, ob eine angegebene Richtung eine gültige ist
+     * @param dx Die x-Richtung
+     * @param dy Die y-Richtung
+     * @return Gibt zurück, ob dies stimmt
+     */
+    public boolean validDirection(int dx, int dy) {
+        if(dx == 0 && dy == 0 || dx == 1 && dy == 1 || dx == -1 && dy == -1
+                || dx == 1 && dy == -1 || dx == -1 && dy == 1) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Diese Funktion prüft, ob die übergegebenen Koordinaten ein korrektess Schiff bilden könne.
+     * Dafür müssen alle Felder überprüft werden, ob diese frei von anderen Schiffen sind.
+     * Hinzu darf es keine Schiffe um Eck oder diagonal geben sowie keine angrenzenden Schiffe.
+     * @param cor Die Koordinaten müssen in der richtigen Reihenfolge stehen.
+     * @return Gibt zurück, ob die Koordinaten so möglich sind.
+     */
+    public boolean canSetShip(int[][] cor) {
+        if(coordinatesOutOfBounds(cor)) {   //Wenn eine Koordinate nicht im Feld, return false
+            return false;
+        }
+        for(int i = 0; i < cor.length; i++) {
+            if (isShipOnField(cor[i][0], cor[i][1])) {  //Wenn ein Feld bereits durch Schuff belegt, return false
+                return false;
             }
         }
-        return null;
+        int[] direction;
+        if(onlyOneDirection(cor)) { //Prüft, dass nicht um Eck gebaut (nur eine legale Richtung)
+            direction = getDirection(cor);
+        } else {
+            return false;
+        }
+        if(direction.length != 0 && validDirection(direction[0], direction[1]) //Prüft, ob gültige Richtung
+                && hasNoNeighbours(cor, direction)) {    //Prüft, ob keine Schiffe drumrum
+            return true;
+        }
+        return false;
     }
 }

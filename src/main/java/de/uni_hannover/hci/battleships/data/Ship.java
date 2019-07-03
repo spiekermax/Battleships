@@ -15,7 +15,13 @@ public class Ship {
     public Ship(int length) {
         this.length = length;
         this.haveSunk = false;
-        this.coordinates = new int[length][length];
+        this.coordinates = new int[length][2];
+
+        for(int i = 0; i < length; i++) {
+            for(int j = 0; j < 2; j++) {
+                coordinates[i][j] = -1;
+            }
+        }
     }
     public int getLength() {
         return length;
@@ -28,4 +34,3 @@ public class Ship {
     public int[][] getCoordinates() { return coordinates; }
 
 }
-

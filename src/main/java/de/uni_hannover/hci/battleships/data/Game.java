@@ -6,20 +6,30 @@ package de.uni_hannover.hci.battleships.data;
 public class Game {
     protected Player p1;
     protected Player p2;
+    protected Player turn;
 
     public Game() {
         p1 = new Player();
         p2 = new Player();
+        turn = p1;
+    }
+
+    public Player getTurn() {
+        return turn;
     }
 
     /**
-     * Diese Methode prüft, ob beide Spieler ihre Schiffe richtig auf dem Spielfeld gesetzt haben.
-     * @return Wenn beide eine gültige Konfiguration haben, wird true zurückgegeben.
+     * Diese Funktion wechselt den Spieler, der gerade am Zug ist und eine Eingabe tätitgen darf.
      */
-    public boolean validGame() {
-        //return p1.getMyBoard().validBoard() && p2.getMyBoard().validBoard(); //?
-        return false;
+    public void switchTurn() {
+        if(turn == p1) {
+            turn = p2;
+        } else {
+            turn = p1;
+        }
     }
 
+    public boolean isOver() {
+        return p1.hasLost() || p2.hasLost();
+    }
 }
-

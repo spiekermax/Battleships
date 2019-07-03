@@ -61,29 +61,33 @@ public class Player {
     }
 
     /**
-     * Diese Funktion prüft, ob ein Schiff des Spielers getroffen wurde
+     * Diese Funktion überprüft, ob der Gegner bei einem Schuss in Leere oder auf ein Schiff trifft
      * @param x Die x Koordinate, wo der Gegner hingeschossen hat. Diese darf nicht über die boardgrenzen hinausgehen.
-     * @param y Die y Koordinate, wo der Gegner hingeschossen hat. Diese darf nicht über die boardgrenzen hinausgehen
-     * @return Es wird ein true zurückgegeben, falls der Gegner ein Schiff getroffen hat.
+     * @param y Die y Koordinate, wo der Gegner hingeschossen hat. Diese darf nicht über die boardgrenzen hinausgehen.
+     * @return Gibt zurück, ob er ein Schiff trifft.
      */
-    public boolean hasBeenShot(int x, int y) {
+    public boolean shipWillBeHit(int x, int y) {
         if(!myBoard.outOfBounds(x,y)) {
             if(myBoard.board[x][y] == FieldMode.SHIP) {
-                myBoard.board[x][y] = FieldMode.SANKED_SHIP;
                 return true;
-            } else if(myBoard.board[x][y] == FieldMode.OCEAN){
-                myBoard.board[x][y] = FieldMode.SHOT;
             }
         }
         return false;
     }
 
     /**
-     * Diese Funktion liest das bestehende eigene Board aus und erstellt die zugehörigen Schiffe.
-     * Die Funktion setzt nicht die Zustände auf dem Board.
+     * Diese Funktion "schießt" auf das Feld und ändert es ab.
+     * @param x Die x Koordinate, wo der Gegner hingeschossen hat. Diese darf nicht über die boardgrenzen hinausgehen.
+     * @param y Die y Koordinate, wo der Gegner hingeschossen hat. Diese darf nicht über die boardgrenzen hinausgehen.
      */
-    public void setMyShips() {
-        myShips = myBoard.readBoard();
+    public void hasBeenShot(int x, int y) {
+        if(!myBoard.outOfBounds(x,y)) {
+            if(shipWillBeHit(x,y)) {
+                myBoard.board[x][y] = FieldMode.SANKED_SHIP;
+            } else {
+                myBoard.board[x][y] = FieldMode.SHOT;
+            }
+        }
     }
 
     /**
@@ -113,4 +117,3 @@ public class Player {
                 two == 4;
     }
 }
-
