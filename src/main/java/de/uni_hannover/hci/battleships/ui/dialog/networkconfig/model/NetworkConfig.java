@@ -8,6 +8,8 @@ public class NetworkConfig
 {
     /* ATTRIBUTES */
 
+    private final boolean _isValid;
+
     private final String _ipAdress;
     private final int _port;
     private final NetworkSocketType _socketType;
@@ -21,8 +23,10 @@ public class NetworkConfig
      * @param port
      * @param socketType
      */
-    public NetworkConfig(String ipAdress, int port, NetworkSocketType socketType)
+    public NetworkConfig(boolean isValid, String ipAdress, int port, NetworkSocketType socketType)
     {
+        this._isValid = isValid;
+
         this._ipAdress = ipAdress;
         this._port = port;
         this._socketType = socketType;
@@ -30,6 +34,15 @@ public class NetworkConfig
 
 
     /* GETTERS & SETTERS */
+
+    /**
+     * TODO
+     * @return
+     */
+    public boolean isValid()
+    {
+        return this._isValid;
+    }
 
     /**
      * TODO

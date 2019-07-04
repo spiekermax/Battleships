@@ -11,16 +11,10 @@
 
     spacing="4">
 
-    <!-- IP-Adresse -->
-    <Text>IP-Adresse</Text>
+    <!-- Name -->
+    <Text>Name</Text>
     <TextField
-        fx:id="_ipAdressInputField"
-        promptText="Optional" />
-
-    <!-- Port -->
-    <Text>Port</Text>
-    <TextField
-        fx:id="_portInputField"
-        promptText="Optional" />
+        fx:id="_nameInputField"
+        promptText="Enter a name for your character" />
 
 </VBox>

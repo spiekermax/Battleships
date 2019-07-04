@@ -7,6 +7,7 @@ import de.uni_hannover.hci.battleships.network.socket.Server;
 import de.uni_hannover.hci.battleships.ui.chat.ChatView;
 import de.uni_hannover.hci.battleships.ui.chat.event.ChatViewMessageConfirmedEvent;
 import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.NetworkConfigDialog;
+import de.uni_hannover.hci.battleships.ui.dialog.playerconfig.PlayerConfigDialog;
 import de.uni_hannover.hci.battleships.util.resource.R;
 
 // Java
@@ -55,6 +56,8 @@ public class App extends Application
         NetworkConfigDialog networkConfigDialog = new NetworkConfigDialog();
         networkConfigDialog.showAndWait().ifPresent(networkConfig ->
         {
+            if(!networkConfig.isValid()) this.terminate();
+
             switch(networkConfig.getSocketType())
             {
                 case SERVER:
@@ -63,10 +66,16 @@ public class App extends Application
                 case CLIENT:
                     this._networkSocket = new Client(1896);
                     break;
-                case INVALID:
-                    Platform.exit();
-                    System.exit(0);
             }
+        });
+
+        // Ermittle gewünschte Charakterkonfiguration
+        PlayerConfigDialog playerConfigDialog = new PlayerConfigDialog();
+        playerConfigDialog.showAndWait().ifPresent(playerConfig ->
+        {
+            if(!playerConfig.isValid()) this.terminate();
+
+            // Create player with name
         });
 
         // Handle Chat-Eingaben
@@ -85,9 +94,22 @@ public class App extends Application
         App.launch(args);
     }
 
+    /**
+     * TODO
+     */
+    private void terminate()
+    {
+        Platform.exit();
+        System.exit(0);
+    }
+
 
     /* GETTERS & SETTERS */
 
+    /**
+     * TODO
+     * @return
+     */
     private NetworkSocket getNetworkSocket()
     {
         return this._networkSocket;

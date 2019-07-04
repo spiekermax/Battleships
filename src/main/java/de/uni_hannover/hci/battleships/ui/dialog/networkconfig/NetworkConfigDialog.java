@@ -1,8 +1,8 @@
 package de.uni_hannover.hci.battleships.ui.dialog.networkconfig;
 
 // Internal dependencies
-import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.model.NetworkConfig;
 import de.uni_hannover.hci.battleships.network.NetworkSocketType;
+import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.model.NetworkConfig;
 import de.uni_hannover.hci.battleships.util.resource.R;
 
 // Java
@@ -46,11 +46,11 @@ public class NetworkConfigDialog extends Dialog<NetworkConfig>
             this.setResultConverter(buttonType ->
             {
                 if(buttonType == this.getHostButton())
-                    return new NetworkConfig("", 123, NetworkSocketType.SERVER);
+                    return new NetworkConfig(true, "TODO", 123, NetworkSocketType.SERVER);
                 else if(buttonType == this.getJoinButton())
-                    return new NetworkConfig("", 123, NetworkSocketType.CLIENT);
+                    return new NetworkConfig(true, "TODO", 123, NetworkSocketType.CLIENT);
                 else
-                    return new NetworkConfig("", 0, NetworkSocketType.INVALID);
+                    return new NetworkConfig(false, null, 0, null);
             });
         }
         catch(IOException e)
