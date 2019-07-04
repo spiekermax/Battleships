@@ -52,7 +52,7 @@ public class Server implements NetworkSocket
     /* METHODS */
 
     /**
-     * TODO
+     * Methode zum Versenden von Nachrichten
      * @param message
      */
     public void sendMessage(String message)

@@ -129,7 +129,7 @@ public class Client implements NetworkSocket
     /* GETTERS & SETTERS */
 
     /**
-     * TODO
+     * Methode die den Port zurückgibt
      * @return
      */
     public int getPort()
