@@ -166,9 +166,7 @@ public class BoardView extends GridPane
             for(int x = 0; x < BOARD_SIZE; ++x)
             {
                 if(this.getCell(x, y) == null)
-                {
                     throw new IndexOutOfBoundsException("ERROR: BoardView.display(): Board cell at " + new Vector2i(x ,y) + "does not exist!");
-                }
 
                 switch(board.getField(x, y))
                 {
