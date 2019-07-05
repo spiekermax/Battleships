@@ -53,30 +53,10 @@ public class App extends Application
         primaryStage.show();
 
         // Ermittle gewünschte Netzwerkkonfiguration
-        NetworkConfigDialog networkConfigDialog = new NetworkConfigDialog();
-        networkConfigDialog.showAndWait().ifPresent(networkConfig ->
-        {
-            if(!networkConfig.isValid()) this.terminate();
-
-            switch(networkConfig.getSocketType())
-            {
-                case SERVER:
-                    this._networkSocket = new Server(networkConfig.getPort());
-                    break;
-                case CLIENT:
-                    this._networkSocket = new Client(networkConfig.getPort());
-                    break;
-            }
-        });
+        this.showNetworkConfigDialog();
 
         // Ermittle gewünschte Charakterkonfiguration
-        PlayerConfigDialog playerConfigDialog = new PlayerConfigDialog();
-        playerConfigDialog.showAndWait().ifPresent(playerConfig ->
-        {
-            if(!playerConfig.isValid()) this.terminate();
-
-            // Create player with name
-        });
+        this.showPlayerConfigDialog();
 
         // Handle Chat-Eingaben
         ChatView chatView = (ChatView) root.lookup( R.id("chat") );
@@ -101,6 +81,57 @@ public class App extends Application
     {
         Platform.exit();
         System.exit(0);
+    }
+
+
+    /* METHODS */
+
+    /**
+     * TODO
+     */
+    private void showNetworkConfigDialog()
+    {
+        NetworkConfigDialog networkConfigDialog = new NetworkConfigDialog();
+        networkConfigDialog.showAndWait().ifPresent(networkConfigResponse ->
+        {
+            if(networkConfigResponse.isAborted()) this.terminate();
+            if(!networkConfigResponse.isValid())
+            {
+                // TODO: Error-Signal
+                System.out.println("Invalid input!");
+                this.showNetworkConfigDialog();
+            }
+
+            switch(networkConfigResponse.getSocketType())
+            {
+                case SERVER:
+                    this._networkSocket = new Server(networkConfigResponse.getPort());
+                    break;
+                case CLIENT:
+                    this._networkSocket = new Client(networkConfigResponse.getPort());
+                    break;
+            }
+        });
+    }
+
+    /**
+     * TODO
+     */
+    private void showPlayerConfigDialog()
+    {
+        PlayerConfigDialog playerConfigDialog = new PlayerConfigDialog();
+        playerConfigDialog.showAndWait().ifPresent(playerConfigResponse ->
+        {
+            if(playerConfigResponse.isAborted()) this.terminate();
+            if(!playerConfigResponse.isValid())
+            {
+                // TODO: Error-Signal
+                System.out.println("Invalid input!");
+                this.showPlayerConfigDialog();
+            }
+
+            // Create player with name
+        });
     }
 
 

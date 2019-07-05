@@ -4,11 +4,11 @@ package de.uni_hannover.hci.battleships.ui.dialog.networkconfig.model;
 import de.uni_hannover.hci.battleships.network.NetworkSocketType;
 
 
-public class NetworkConfig
+public class NetworkConfigDialogResponse
 {
     /* ATTRIBUTES */
 
-    private final boolean _isValid;
+    private final NetworkConfigDialogResponseType _type;
 
     private final String _ipAdress;
     private final int _port;
@@ -23,9 +23,9 @@ public class NetworkConfig
      * @param port
      * @param socketType
      */
-    public NetworkConfig(boolean isValid, String ipAdress, int port, NetworkSocketType socketType)
+    public NetworkConfigDialogResponse(NetworkConfigDialogResponseType type, String ipAdress, int port, NetworkSocketType socketType)
     {
-        this._isValid = isValid;
+        this._type = type;
 
         this._ipAdress = ipAdress;
         this._port = port;
@@ -39,9 +39,27 @@ public class NetworkConfig
      * TODO
      * @return
      */
+    public boolean isAborted()
+    {
+        return this.getType() == NetworkConfigDialogResponseType.ABORT;
+    }
+
+    /**
+     * TODO
+     * @return
+     */
     public boolean isValid()
     {
-        return this._isValid;
+        return this.getType() == NetworkConfigDialogResponseType.VALID;
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    public NetworkConfigDialogResponseType getType()
+    {
+        return this._type;
     }
 
     /**

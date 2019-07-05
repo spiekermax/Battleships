@@ -1,7 +1,8 @@
 package de.uni_hannover.hci.battleships.ui.dialog.playerconfig;
 
 // Internal dependencies
-import de.uni_hannover.hci.battleships.ui.dialog.playerconfig.model.PlayerConfig;
+import de.uni_hannover.hci.battleships.ui.dialog.playerconfig.model.PlayerConfigDialogResponse;
+import de.uni_hannover.hci.battleships.ui.dialog.playerconfig.model.PlayerConfigDialogResponseType;
 import de.uni_hannover.hci.battleships.util.resource.R;
 
 // Java
@@ -15,7 +16,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 
 
-public class PlayerConfigDialog extends Dialog<PlayerConfig>
+public class PlayerConfigDialog extends Dialog<PlayerConfigDialogResponse>
 {
     /* COMPONENTS */
 
@@ -41,9 +42,9 @@ public class PlayerConfigDialog extends Dialog<PlayerConfig>
             this.setResultConverter(buttonType ->
             {
                 if(buttonType == this.getConfirmButton())
-                    return new PlayerConfig(true, "TODO");
+                    return new PlayerConfigDialogResponse(PlayerConfigDialogResponseType.VALID, "TODO");
                 else
-                    return new PlayerConfig(false, null);
+                    return new PlayerConfigDialogResponse(PlayerConfigDialogResponseType.ABORT, null);
             });
         }
         catch(IOException e)

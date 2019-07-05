@@ -2,7 +2,8 @@ package de.uni_hannover.hci.battleships.ui.dialog.networkconfig;
 
 // Internal dependencies
 import de.uni_hannover.hci.battleships.network.NetworkSocketType;
-import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.model.NetworkConfig;
+import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.model.NetworkConfigDialogResponse;
+import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.model.NetworkConfigDialogResponseType;
 import de.uni_hannover.hci.battleships.util.resource.R;
 
 // Java
@@ -17,7 +18,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
 
 
-public class NetworkConfigDialog extends Dialog<NetworkConfig>
+public class NetworkConfigDialog extends Dialog<NetworkConfigDialogResponse>
 {
     /* COMPONENTS */
 
@@ -53,11 +54,11 @@ public class NetworkConfigDialog extends Dialog<NetworkConfig>
             this.setResultConverter(buttonType ->
             {
                 if(buttonType == this.getHostButton())
-                    return new NetworkConfig(true, this.getIpAdressTextFieldText(), this.getPortTextFieldNum(), NetworkSocketType.SERVER);
+                    return new NetworkConfigDialogResponse(NetworkConfigDialogResponseType.VALID, this.getIpAdressTextFieldText(), this.getPortTextFieldNum(), NetworkSocketType.SERVER);
                 else if(buttonType == this.getJoinButton())
-                    return new NetworkConfig(true, this.getIpAdressTextFieldText(), this.getPortTextFieldNum(), NetworkSocketType.CLIENT);
+                    return new NetworkConfigDialogResponse(NetworkConfigDialogResponseType.VALID, this.getIpAdressTextFieldText(), this.getPortTextFieldNum(), NetworkSocketType.CLIENT);
                 else
-                    return new NetworkConfig(false, null, 0, null);
+                    return new NetworkConfigDialogResponse(NetworkConfigDialogResponseType.ABORT, null, 0, null);
             });
         }
         catch(IOException e)
