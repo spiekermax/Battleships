@@ -1,5 +1,7 @@
 package de.uni_hannover.hci.battleships.data;
 
+import de.uni_hannover.hci.battleships.util.Vector2i;
+
 /**
  * Diese Klasse beschreibt ein Spielfeld
  */
@@ -35,6 +37,10 @@ public class Board {
         } else {
             return null;
         }
+    }
+
+    public Ship addShip(Vector2i[] cor) {
+        return new Ship(cor, this);
     }
 
     public void setShip(int x, int y) {
@@ -76,18 +82,18 @@ public class Board {
         return dir;
     }
 
-    public boolean coordinatesOutOfBounds(int[][] cor) {
+    public boolean coordinatesOutOfBounds(Vector2i[] cor) {
         for(int i = 0; i < cor.length; i++) {
-            if(outOfBounds(cor[i][0], cor[i][1])){
+            if(outOfBounds(cor[i].getX(), cor[i].getY())){
                 return true;
             }
         }
         return false;
     }
 
-    public boolean isElementOfCoordinates(int[][] cor, int x, int y) {
+    public boolean isElementOfCoordinates(Vector2i[] cor, int x, int y) {
         for(int i = 0; i < cor.length; i++) {
-            if(x == cor[i][0] && y == cor[i][1]) {
+            if(x == cor[i].getX() && y == cor[i].getY()) {
                 return true;
             }
         }
@@ -101,19 +107,19 @@ public class Board {
      * @param dir Die Richtung in der die Schiffe gebaut sind
      * @return Gibt true zurück, falls ein Schiff keine Nachbarn hat.
      */
-    public boolean hasNoNeighbours(int[][] cor, int[] dir) {
+    public boolean hasNoNeighbours(Vector2i[] cor, int[] dir) {
         int[][] possible = getAllPossibleDirections();
         int x = -1; int y = -1;
         for(int i = 0; i < cor.length; i++) {
-            x = cor[i][0]; y = cor[i][1];
+            x = cor[i].getX(); y = cor[i].getY();
             if(outOfBounds(x,y)) {continue;}
             for(int j = 0; j < possible.length; j++) {  //Läuft für jede Koordinate alle Richtungen ab
                 if(possible[j][0] == dir[0] && possible[i][1] == dir[1]) {
                     if(isElementOfCoordinates(cor,
-                            cor[i][0]+possible[j][0],
-                            cor[i][1]+possible[j][1])) {  //Wenn Schiff(Koordinaten) in die Richtung geht, überspringe
+                            cor[i].getX()+possible[j][0],
+                            cor[i].getY()+possible[j][1])) {  //Wenn Schiff(Koordinaten) in die Richtung geht, überspringe
                         continue;
-                    } else if(board[cor[i][0]+possible[j][0]] [cor[i][1]+possible[j][1]]
+                    } else if(board[cor[i].getX()+possible[j][0]] [cor[i].getY()+possible[j][1]]
                             == FieldMode.SHIP){ //Falls Schiff nicht in eigener Richtung, muss prüfen, ob in dieser Richtung ein fremdes Schiff steht
                         return false;
                     }
@@ -125,7 +131,7 @@ public class Board {
                         continue;
                     }
                 }
-                if(isShipOnField(cor[i][0]+possible[j][0], cor[i][1]+ possible[j][1])) { //Wenn umliegendes Schiff vorhanden
+                if(isShipOnField(cor[i].getX()+possible[j][0], cor[i].getY()+ possible[j][1])) { //Wenn umliegendes Schiff vorhanden
                     return false;
                 }
             }
@@ -135,16 +141,16 @@ public class Board {
 
 
     //Die Funktion prüft, ob es zwischen den Koordinaten jeweils immer nur eine Richtung gibt
-    public boolean onlyOneDirection(int[][] cor) {
+    public boolean onlyOneDirection(Vector2i[] cor) {
         if(cor.length <= 1) {return false;}
         int dx = 0; int dy = 0;
         for(int i = 0; i < cor.length; i++) {
             if(i == 1) {    //Erste Richtung gespeichert
-                dx = cor[i][0] - cor[i-1][0];
-                dy = cor[i][1] - cor[i-1][1];
+                dx = cor[i].getX() - cor[i-1].getX();
+                dy = cor[i].getY() - cor[i-1].getY();
             } else if(i > 1){   //Prüft, ob alle Folgenden auch immer dieselbe sind
-                if(dx != cor[i][0] - cor[i-1][0]
-                        || dy != cor[i][1] - cor[i-1][1]) {
+                if(dx != cor[i].getX() - cor[i-1].getX()
+                        || dy != cor[i].getY() - cor[i-1].getY()) {
                     return false;
                 }
             }
@@ -154,10 +160,10 @@ public class Board {
 
     //Diese Fkt. gibt die Differenz zweier Koordinaten aus.
     // Sie prüft nicht, ob diese überhaupt existieren.
-    public int[] getDirection(int[][]cor) {
+    public int[] getDirection(Vector2i[] cor) {
         int[] dir = new int[2];
-        dir[0] = cor[1][0] - cor[0][0];
-        dir[1] = cor[1][1] - cor[0][1];
+        dir[0] = cor[1].getX() - cor[0].getX();
+        dir[1] = cor[1].getY() - cor[0].getY();
         return dir;
     }
 
@@ -182,12 +188,12 @@ public class Board {
      * @param cor Die Koordinaten müssen in der richtigen Reihenfolge stehen.
      * @return Gibt zurück, ob die Koordinaten so möglich sind.
      */
-    public boolean canSetShip(int[][] cor) {
+    public boolean canSetShip(Vector2i[] cor) {
         if(coordinatesOutOfBounds(cor)) {   //Wenn eine Koordinate nicht im Feld, return false
             return false;
         }
         for(int i = 0; i < cor.length; i++) {
-            if (isShipOnField(cor[i][0], cor[i][1])) {  //Wenn ein Feld bereits durch Schuff belegt, return false
+            if (isShipOnField(cor[i].getX(), cor[i].getY())) {  //Wenn ein Feld bereits durch Schuff belegt, return false
                 return false;
             }
         }

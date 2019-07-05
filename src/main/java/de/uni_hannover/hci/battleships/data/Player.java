@@ -1,24 +1,31 @@
 package de.uni_hannover.hci.battleships.data;
 
+import de.uni_hannover.hci.battleships.util.Vector2i;
+
 /**
  * Diese Klasse beschreibt einen Spieler.
  */
 public class Player {
-    //private String name;
+    protected String name;
     protected Board myBoard;
     protected Board enemyBoard;
+    protected boolean myTurn;
 
     protected Ship[] myShips;
 
     /**
      * Dieser Konstruktor erstellt einen neuen Spieler, welcher ein eigenes und gegnerisches Spielfeld 10x10 besitzt.
      */
-    public Player() {
+    public Player(String name) {
         this.myBoard = new Board(10,10);
         this.enemyBoard = new Board(10,10);
+        this.myTurn = false;
+        this.name = name;
 
         this.myShips = new Ship[10];
     }
+    
+    public String getName() { return this.name; }
 
     public FieldMode[][] getMyBoard() { return this.myBoard.getBoard(); }
 
@@ -29,6 +36,24 @@ public class Player {
             return myShips[nr];
         }
         return null;
+    }
+
+    public boolean addShip(Vector2i[] cor) {
+        Ship s = myBoard.addShip(cor);
+        for(int i = 0; i < myShips.length; i++) {
+            if(myShips[i] != null) {
+                myShips[i] = s;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Diese Funktion wechselt den Spieler, der gerade am Zug ist und eine Eingabe tätitgen darf.
+     */
+    public void switchTurn() {
+        myTurn = !myTurn;
     }
 
     /**
@@ -52,7 +77,7 @@ public class Player {
      */
     public boolean shipSank(Ship s) {
         for(int i = 0; i < s.coordinates.length; i++) {
-            if(myBoard.board[s.coordinates[i][0]][s.coordinates[i][1]] != FieldMode.SANKED_SHIP) {
+            if(myBoard.board[s.coordinates[i].getX()][s.coordinates[i].getY()] != FieldMode.SANKED_SHIP) {
                 return false;
             }
         }

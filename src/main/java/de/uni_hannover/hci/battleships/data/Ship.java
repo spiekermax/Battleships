@@ -1,26 +1,31 @@
 package de.uni_hannover.hci.battleships.data;
 
+import de.uni_hannover.hci.battleships.util.Vector2i;
+
 /**
  * Diese Klasse beschreibt ein Schiff.
  */
 public class Ship {
     protected int length;
     protected boolean haveSunk;
-    protected int[][] coordinates;
+    protected Vector2i[] coordinates;
+    protected Board myBoard;
 
     /**
      * Diese Methode ist ein Konstruktor.
-     * @param length Dies ist die angegebene Länge des Schiffes
+     * @param cor Dies sind die Koordinaten des Schiffes
+     * @param b Dies ist das Board, auf dem das Schiff erstellt wird
      */
-    public Ship(int length) {
-        this.length = length;
+    public Ship(Vector2i[] cor, Board b) {
+        this.length = cor.length;
         this.haveSunk = false;
-        this.coordinates = new int[length][2];
+        this.coordinates = cor;
+        this.myBoard = b;
 
-        for(int i = 0; i < length; i++) {
-            for(int j = 0; j < 2; j++) {
-                coordinates[i][j] = -1;
-            }
+        int x; int y;
+        for(int i = 0; i < cor.length; i++) {
+            x = cor[i].getX(); y = cor[i].getY();
+            this.myBoard.board[x][y] = FieldMode.SHIP;
         }
     }
     public int getLength() {
@@ -31,6 +36,6 @@ public class Ship {
         return haveSunk;
     }
 
-    public int[][] getCoordinates() { return coordinates; }
+    public Vector2i[] getCoordinates() { return coordinates; }
 
 }

@@ -8,9 +8,9 @@ public class Game {
     protected Player p2;
     protected Player turn;
 
-    public Game() {
-        p1 = new Player();
-        p2 = new Player();
+    public Game(String n1, String n2) {
+        p1 = new Player(n1);
+        p2 = new Player(n2);
         turn = p1;
     }
 
