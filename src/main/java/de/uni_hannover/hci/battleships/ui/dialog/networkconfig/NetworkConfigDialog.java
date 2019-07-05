@@ -14,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.TextField;
 
 
 public class NetworkConfigDialog extends Dialog<NetworkConfig>
@@ -23,6 +24,9 @@ public class NetworkConfigDialog extends Dialog<NetworkConfig>
     private final ButtonType _hostButton = new ButtonType("Host");
     private final ButtonType _joinButton = new ButtonType("Join");
     private final ButtonType _cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+    private final TextField _ipAdressTextField;
+    private final TextField _portTextField;
 
 
     /* LIFECYCLE */
@@ -43,12 +47,15 @@ public class NetworkConfigDialog extends Dialog<NetworkConfig>
             this.getDialogPane().setContent(dialogContent);
             this.getDialogPane().getButtonTypes().setAll(this.getHostButton(), this.getJoinButton(), this.getCancelButton());
 
+            this._ipAdressTextField = (TextField) dialogContent.lookup( R.id("_ipAdressInputField") );
+            this._portTextField = (TextField) dialogContent.lookup( R.id("_portInputField") );
+
             this.setResultConverter(buttonType ->
             {
                 if(buttonType == this.getHostButton())
-                    return new NetworkConfig(true, "TODO", 123, NetworkSocketType.SERVER);
+                    return new NetworkConfig(true, this.getIpAdressTextFieldText(), this.getPortTextFieldNum(), NetworkSocketType.SERVER);
                 else if(buttonType == this.getJoinButton())
-                    return new NetworkConfig(true, "TODO", 123, NetworkSocketType.CLIENT);
+                    return new NetworkConfig(true, this.getIpAdressTextFieldText(), this.getPortTextFieldNum(), NetworkSocketType.CLIENT);
                 else
                     return new NetworkConfig(false, null, 0, null);
             });
@@ -87,5 +94,41 @@ public class NetworkConfigDialog extends Dialog<NetworkConfig>
     private ButtonType getCancelButton()
     {
         return this._cancelButton;
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    private TextField getIpAdressTextField()
+    {
+        return this._ipAdressTextField;
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    private String getIpAdressTextFieldText()
+    {
+        return this.getIpAdressTextField().getText();
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    private TextField getPortTextField()
+    {
+        return this._portTextField;
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    private int getPortTextFieldNum()
+    {
+        return Integer.parseInt( this.getPortTextField().getText() );
     }
 }

@@ -61,10 +61,10 @@ public class App extends Application
             switch(networkConfig.getSocketType())
             {
                 case SERVER:
-                    this._networkSocket = new Server(1896);
+                    this._networkSocket = new Server(networkConfig.getPort());
                     break;
                 case CLIENT:
-                    this._networkSocket = new Client(1896);
+                    this._networkSocket = new Client(networkConfig.getPort());
                     break;
             }
         });
