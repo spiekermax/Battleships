@@ -38,6 +38,7 @@ public class Client implements NetworkSocket
             this._socket = new Socket(IpAddress, this.getPort());
             this._inputStreamReader = new BufferedReader(new InputStreamReader(this.getSocket().getInputStream()));
             this._outputStreamWriter = new BufferedWriter(new OutputStreamWriter(this.getSocket().getOutputStream()));
+            this._socket.setSoTimeout(20000);
 
             this.setIsRunning(true);
             this.runFetchLoop();
