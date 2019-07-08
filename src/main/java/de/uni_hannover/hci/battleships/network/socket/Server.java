@@ -2,6 +2,7 @@ package de.uni_hannover.hci.battleships.network.socket;
 
 // Internal dependencies
 import de.uni_hannover.hci.battleships.network.NetworkSocket;
+import de.uni_hannover.hci.battleships.util.Vector2i;
 
 // Java
 import java.io.*;
@@ -54,13 +55,13 @@ public class Server implements NetworkSocket
 
     /**
      * Methode zum Versenden von Nachrichten
-     * @param message
+     * @param string
      */
-    public void sendMessage(String message)
+    public void sendString(String string)
     {
         try
         {
-            this.getOutputStreamWriter().write(message + "\n");
+            this.getOutputStreamWriter().write(string + "\n");
             this.getOutputStreamWriter().flush();
         }
         catch(IOException e)
@@ -68,6 +69,16 @@ public class Server implements NetworkSocket
             // TODO: Besseres ERROR-Handling
             e.printStackTrace();
         }
+    }
+
+    public void sendMessage(String message)
+    {
+        this.sendString(message);
+    }
+
+    public void sendVector(Vector2i vector)
+    {
+        this.sendString(vector.toString());
     }
 
     /**

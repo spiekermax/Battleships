@@ -7,5 +7,5 @@ public interface NetworkSocket
      * TODO
      * @param message
      */
-    public void sendMessage(String message);
+    public void sendString(String message);
 }

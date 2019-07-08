@@ -72,6 +72,13 @@ public class Vector2i
 
     /* MISCELLANEOUS */
 
+    public static Vector2i fromString(String string)
+    {
+        
+
+        return new Vector2i(0, 0);
+    }
+
     /**
      * TODO
      * @return

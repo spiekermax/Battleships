@@ -64,7 +64,7 @@ public class App extends Application
         {
             if(event.getMessage().trim().equals("")) return;
 
-            this.getNetworkSocket().sendMessage(event.getMessage());
+            this.getNetworkSocket().sendString(event.getMessage());
             chatView.addMessage(null, event.getMessage());
         });
     }
