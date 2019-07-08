@@ -37,7 +37,7 @@ public class Server implements NetworkSocket
 
         try
         {
-            this._serverSocket = new ServerSocket(this.getPort());
+            this._serverSocket = new ServerSocket(this.getPort(), 1, this.getIpAdress());
 
             this.setIsRunning(true);
             this.acceptConnections();

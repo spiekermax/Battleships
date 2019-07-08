@@ -108,7 +108,7 @@ public class App extends Application
                     this._networkSocket = new Server(networkConfigResponse.getPort());
                     break;
                 case CLIENT:
-                    this._networkSocket = new Client(networkConfigResponse.getPort());
+                    this._networkSocket = new Client(networkConfigResponse.getPort(), networkConfigResponse.getIpAdress());
                     break;
             }
         });
