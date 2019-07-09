@@ -5,6 +5,8 @@ import de.uni_hannover.hci.battleships.data.Board;
 import de.uni_hannover.hci.battleships.ui.board.cell.BoardViewCell;
 import de.uni_hannover.hci.battleships.ui.board.cell.BoardViewCellColor;
 import de.uni_hannover.hci.battleships.ui.board.event.BoardViewCellClickedEvent;
+import de.uni_hannover.hci.battleships.ui.board.event.BoardViewCellHoveredEvent;
+import de.uni_hannover.hci.battleships.ui.board.event.BoardViewRightClickedEvent;
 import de.uni_hannover.hci.battleships.util.Vector2i;
 import de.uni_hannover.hci.battleships.util.resource.R;
 
@@ -14,6 +16,7 @@ import java.io.IOException;
 // JavaFX
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -108,6 +111,9 @@ public class BoardView extends GridPane
         Vector2i currentMouseTargetCoords = this.calcCellCoords(e.getX(), e.getY());
         BoardViewCell currentMouseTargetCell = this.getCell(currentMouseTargetCoords);
 
+        // Fire events
+        this.fireEvent(new BoardViewCellHoveredEvent(currentMouseTargetCoords));
+
         // If the targeted cell changed
         if(currentMouseTargetCell != this.getLastMouseTargetCell())
         {
@@ -130,9 +136,16 @@ public class BoardView extends GridPane
      */
     private void onMouseClick(MouseEvent e)
     {
-        // Fire 'board-view-cell-clicked' event, passing on the grid coordinates of the click.
-        Vector2i coords = this.calcCellCoords(e.getX(), e.getY());
-        this.fireEvent(new BoardViewCellClickedEvent(coords));
+        if(e.getButton() == MouseButton.PRIMARY)
+        {
+            // Fire 'board-view-cell-clicked' event, passing on the grid coordinates of the click.
+            Vector2i coords = this.calcCellCoords(e.getX(), e.getY());
+            this.fireEvent(new BoardViewCellClickedEvent(coords));
+        }
+        else if(e.getButton() == MouseButton.SECONDARY)
+        {
+            this.fireEvent(new BoardViewRightClickedEvent());
+        }
     }
 
     /**

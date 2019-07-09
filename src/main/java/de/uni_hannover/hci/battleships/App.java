@@ -9,6 +9,7 @@ import de.uni_hannover.hci.battleships.network.socket.Client;
 import de.uni_hannover.hci.battleships.network.socket.Server;
 import de.uni_hannover.hci.battleships.ui.board.BoardView;
 import de.uni_hannover.hci.battleships.ui.board.event.BoardViewCellClickedEvent;
+import de.uni_hannover.hci.battleships.ui.board.event.BoardViewRightClickedEvent;
 import de.uni_hannover.hci.battleships.ui.chat.ChatView;
 import de.uni_hannover.hci.battleships.ui.chat.event.ChatViewMessageConfirmedEvent;
 import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.NetworkConfigDialog;
@@ -106,6 +107,13 @@ public class App extends Application
              * if( this.getUserPlayer().getAvailableShips().size() == 0 ) this.getUserPlayer().setIsReady(true); // Possible replacement: this.getUserPlayer().hasAvailableShips()
              */
         });
+        userBoardView.addEventHandler(BoardViewRightClickedEvent.EVENT_TYPE, event ->
+        {
+            /*
+             * this.getUserPlayer().toggleDefaultShipOrientation();
+             */
+        });
+
         enemyBoardView.addEventHandler(BoardViewCellClickedEvent.EVENT_TYPE, event ->
         {
             /*
