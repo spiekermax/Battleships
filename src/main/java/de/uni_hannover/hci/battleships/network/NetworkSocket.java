@@ -1,5 +1,8 @@
 package de.uni_hannover.hci.battleships.network;
 
+// JavaFX
+import javafx.scene.Node;
+
 
 public interface NetworkSocket
 {
@@ -8,4 +11,10 @@ public interface NetworkSocket
      * @param message
      */
     public void sendString(String message);
+
+    /**
+     * TODO
+     * @return
+     */
+    public Node getEventEmitter();
 }

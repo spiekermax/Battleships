@@ -85,8 +85,7 @@ public class ChatView extends VBox
      */
     public void addMessage(Player source, String message)
     {
-        // TODO: Waiting for player.getName()
-        this.getMessageView().setText(this.getMessageView().getText() + "Player: " + message + "\n");
+        this.getMessageView().setText(this.getMessageView().getText() + source.getName() + ": " + message + "\n");
         this.getMessageView().setScrollTop(Double.MAX_VALUE);
     }
 

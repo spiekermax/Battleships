@@ -68,6 +68,19 @@ public class NetworkConfigDialog extends Dialog<NetworkConfigDialogResponse>
     }
 
 
+    /* METHODS */
+
+    private boolean checkIpAdress()
+    {
+        return false;
+    }
+
+    private boolean checkPort()
+    {
+        return false;
+    }
+
+
     /* GETTERS & SETTERS */
 
     /**

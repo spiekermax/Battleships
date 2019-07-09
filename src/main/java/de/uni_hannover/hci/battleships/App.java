@@ -1,9 +1,13 @@
 package de.uni_hannover.hci.battleships;
 
 // Internal dependencies
+import de.uni_hannover.hci.battleships.data.Player;
 import de.uni_hannover.hci.battleships.network.NetworkSocket;
+import de.uni_hannover.hci.battleships.network.event.NetworkSocketMessageReceivedEvent;
 import de.uni_hannover.hci.battleships.network.socket.Client;
 import de.uni_hannover.hci.battleships.network.socket.Server;
+import de.uni_hannover.hci.battleships.ui.board.BoardView;
+import de.uni_hannover.hci.battleships.ui.board.event.BoardViewCellClickedEvent;
 import de.uni_hannover.hci.battleships.ui.chat.ChatView;
 import de.uni_hannover.hci.battleships.ui.chat.event.ChatViewMessageConfirmedEvent;
 import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.NetworkConfigDialog;
@@ -35,6 +39,8 @@ public class App extends Application
 
     /* ATTRIBUTES */
 
+    private Player _user;
+
     private NetworkSocket _networkSocket;
 
 
@@ -52,20 +58,38 @@ public class App extends Application
         primaryStage.setMinHeight(MIN_WINDOW_HEIGHT);
         primaryStage.show();
 
+        // UI-Komponenten
+        ChatView chatView = (ChatView) root.lookup( R.id("chat") );
+        BoardView userBoardView = (BoardView) root.lookup( R.id("player_board") );
+
+
         // Ermittle gewünschte Netzwerkkonfiguration
         this.showNetworkConfigDialog();
 
         // Ermittle gewünschte Charakterkonfiguration
         this.showPlayerConfigDialog();
 
+
         // Handle Chat-Eingaben
-        ChatView chatView = (ChatView) root.lookup( R.id("chat") );
         chatView.addEventHandler(ChatViewMessageConfirmedEvent.EVENT_TYPE, event ->
         {
             if(event.getMessage().trim().equals("")) return;
 
-            this.getNetworkSocket().sendString(event.getMessage());
-            chatView.addMessage(null, event.getMessage());
+            this.getNetworkSocket().sendString(event.getMessage()); // TODO: replace with sendMessage()
+            chatView.addMessage(this.getUserPlayer(), event.getMessage());
+        });
+
+        // Zeige empfangene Chat-Nachrichten
+        this.getNetworkSocket().getEventEmitter().addEventHandler(NetworkSocketMessageReceivedEvent.EVENT_TYPE, event ->
+        {
+            chatView.addMessage(new Player("TODO"), event.getMessage()); // TODO: retrieve enemy player name
+        });
+
+
+        // Handle Board-Clicks
+        userBoardView.addEventHandler(BoardViewCellClickedEvent.EVENT_TYPE, event ->
+        {
+            // this.getUserPlayer().addShip();
         });
     }
 
@@ -130,12 +154,21 @@ public class App extends Application
                 this.showPlayerConfigDialog();
             }
 
-            // Create player with name
+            this._user = new Player(playerConfigResponse.getName());
         });
     }
 
 
     /* GETTERS & SETTERS */
+
+    /**
+     * TODO
+     * @return
+     */
+    private Player getUserPlayer()
+    {
+        return this._user;
+    }
 
     /**
      * TODO

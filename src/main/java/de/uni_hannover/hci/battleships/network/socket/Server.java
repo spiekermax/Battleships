@@ -2,7 +2,12 @@ package de.uni_hannover.hci.battleships.network.socket;
 
 // Internal dependencies
 import de.uni_hannover.hci.battleships.network.NetworkSocket;
+import de.uni_hannover.hci.battleships.network.event.NetworkSocketMessageReceivedEvent;
 import de.uni_hannover.hci.battleships.util.Vector2i;
+
+// JavaFX
+import javafx.scene.Node;
+import javafx.scene.layout.AnchorPane;
 
 // Java
 import java.io.*;
@@ -18,10 +23,11 @@ public class Server implements NetworkSocket
 
     private boolean _isRunning = false;
 
+    private final AnchorPane _eventEmitter = new AnchorPane();
+
     private int _port;
     private ServerSocket _serverSocket;
     private Socket _socket;
-
     private BufferedReader _inputStreamReader;
     private BufferedWriter _outputStreamWriter;
 
@@ -59,6 +65,12 @@ public class Server implements NetworkSocket
      */
     public void sendString(String string)
     {
+        if(this.getOutputStreamWriter() == null)
+        {
+            System.out.println("INFO: Server(): No client connected!");
+            return;
+        }
+
         try
         {
             this.getOutputStreamWriter().write(string + "\n");
@@ -120,8 +132,10 @@ public class Server implements NetworkSocket
 
                 if(fetchedString != null)
                 {
-                    // Fire event here
-                    System.out.println("Message from Client: " + fetchedString);
+                    // if is message
+                    this.getEventEmitter().fireEvent(new NetworkSocketMessageReceivedEvent(fetchedString));
+
+                    // if is vector
                 }
             }
         }
@@ -200,6 +214,15 @@ public class Server implements NetworkSocket
     private void setIsRunning(boolean newIsRunning)
     {
         this._isRunning = newIsRunning;
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    public Node getEventEmitter()
+    {
+        return this._eventEmitter;
     }
 
     /**

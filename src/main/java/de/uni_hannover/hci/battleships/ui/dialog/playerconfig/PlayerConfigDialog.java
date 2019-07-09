@@ -14,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.TextField;
 
 
 public class PlayerConfigDialog extends Dialog<PlayerConfigDialogResponse>
@@ -22,6 +23,8 @@ public class PlayerConfigDialog extends Dialog<PlayerConfigDialogResponse>
 
     private final ButtonType _confirmButton = new ButtonType("OK");
     private final ButtonType _cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+    private final TextField _nameInputField;
 
 
     /* LIFECYCLE */
@@ -39,10 +42,12 @@ public class PlayerConfigDialog extends Dialog<PlayerConfigDialogResponse>
             this.getDialogPane().setContent(dialogContent);
             this.getDialogPane().getButtonTypes().setAll(this.getConfirmButton(), this.getCancelButton());
 
+            this._nameInputField = (TextField) dialogContent.lookup( R.id("_nameInputField") );
+
             this.setResultConverter(buttonType ->
             {
                 if(buttonType == this.getConfirmButton())
-                    return new PlayerConfigDialogResponse(PlayerConfigDialogResponseType.VALID, "TODO");
+                    return new PlayerConfigDialogResponse(PlayerConfigDialogResponseType.VALID, this.getNameInputField().getText());
                 else
                     return new PlayerConfigDialogResponse(PlayerConfigDialogResponseType.ABORT, null);
             });
@@ -72,5 +77,14 @@ public class PlayerConfigDialog extends Dialog<PlayerConfigDialogResponse>
     private ButtonType getCancelButton()
     {
         return this._cancelButton;
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    private TextField getNameInputField()
+    {
+        return this._nameInputField;
     }
 }
