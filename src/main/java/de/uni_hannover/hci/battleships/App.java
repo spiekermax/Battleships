@@ -4,6 +4,7 @@ package de.uni_hannover.hci.battleships;
 import de.uni_hannover.hci.battleships.data.Player;
 import de.uni_hannover.hci.battleships.network.NetworkSocket;
 import de.uni_hannover.hci.battleships.network.event.NetworkSocketMessageReceivedEvent;
+import de.uni_hannover.hci.battleships.network.event.NetworkSocketVectorReceivedEvent;
 import de.uni_hannover.hci.battleships.network.socket.Client;
 import de.uni_hannover.hci.battleships.network.socket.Server;
 import de.uni_hannover.hci.battleships.ui.board.BoardView;
@@ -40,6 +41,7 @@ public class App extends Application
     /* ATTRIBUTES */
 
     private Player _user;
+    private Player _enemy;
 
     private NetworkSocket _networkSocket;
 
@@ -61,6 +63,7 @@ public class App extends Application
         // UI-Komponenten
         ChatView chatView = (ChatView) root.lookup( R.id("chat") );
         BoardView userBoardView = (BoardView) root.lookup( R.id("player_board") );
+        BoardView enemyBoardView = (BoardView) root.lookup( R.id("enemy_board") ); enemyBoardView.setShipsVisible(false);
 
 
         // Ermittle gewünschte Netzwerkkonfiguration
@@ -75,7 +78,7 @@ public class App extends Application
         {
             if(event.getMessage().trim().equals("")) return;
 
-            this.getNetworkSocket().sendString(event.getMessage()); // TODO: replace with sendMessage()
+            this.getNetworkSocket().sendMessage(event.getMessage()); // TODO: replace with sendMessage()
             chatView.addMessage(this.getUserPlayer(), event.getMessage());
         });
 
@@ -89,7 +92,55 @@ public class App extends Application
         // Handle Board-Clicks
         userBoardView.addEventHandler(BoardViewCellClickedEvent.EVENT_TYPE, event ->
         {
-            // this.getUserPlayer().addShip();
+            /*
+             * if( this.getUserPlayer().isReady() ) return;
+             *
+             * if( this.getUserPlayer().getBoard().addShip(event.getCoords(), this.getUserPlayer().getAvailableShips().get(0)) )
+             * {
+             *     this.getNetworkSocket().sendVector(event.getCoords());
+             *
+             *     this.getUserPlayer().removeFirstAvailableShip();
+             *     userBoardView.display( this.getUserPlayer().getBoard() );
+             * }
+             *
+             * if( this.getUserPlayer().getAvailableShips().size() == 0 ) this.getUserPlayer().setIsReady(true); // Possible replacement: this.getUserPlayer().hasAvailableShips()
+             */
+        });
+        enemyBoardView.addEventHandler(BoardViewCellClickedEvent.EVENT_TYPE, event ->
+        {
+            /*
+             * if( !this.getUserPlayer().isReady() || !this.getEnemyPlayer().isReady() ) return;
+             * if( !this.getUserPlayer().hasTheMove() ) return;
+             *
+             * this.getEnemyPlayer().getBoard().shoot(event.getCoords());
+             * enemyBoardView.display(this.getEnemyPlayer().getBoard());
+             *
+             * this.getNetworkSocket().sendVector(event.getCoords());
+             * this.getUserPlayer().setHasTheMove(false); // TODO: Initialwerte für 'hasTheMove' setzen (einer true, einer false)
+             * this.getEnemyPlayer().setHasTheMove(true);
+             */
+        });
+
+        // Handle empfangene Board-Koordinaten
+        this.getNetworkSocket().getEventEmitter().addEventHandler(NetworkSocketVectorReceivedEvent.EVENT_TYPE, event ->
+        {
+            /*
+             * if( !this.getEnemyPlayer().isReady() )
+             * {
+             *     this.getEnemyPlayer().getBoard().addShip(event.getCoords(), this.getEnemyPlayer().getAvailableShips().get(0)); // Legal-check is redundant
+             *     this.getEnemyPlayer().removeFirstAvailableShip();
+             *
+             *     if ( this.getUserPlayer().getAvailableShips().size() == 0 ) this.getEnemyPlayer().setIsReady(true);
+             * }
+             * else
+             * {
+             *     this.getUserPlayer().getBoard().shoot(event.getCoords());
+             *     userBoardView.display(this.getUserPlayer().getBoard()));
+             *
+             *     this.getUserPlayer().setHasTheMove(true);
+             *     this.getEnemyPlayer().setHasTheMove(false);
+             * }
+             */
         });
     }
 
@@ -168,6 +219,15 @@ public class App extends Application
     private Player getUserPlayer()
     {
         return this._user;
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    private Player getEnemyPlayer()
+    {
+        return this._enemy;
     }
 
     /**

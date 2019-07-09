@@ -133,9 +133,6 @@ public class BoardView extends GridPane
         // Fire 'board-view-cell-clicked' event, passing on the grid coordinates of the click.
         Vector2i coords = this.calcCellCoords(e.getX(), e.getY());
         this.fireEvent(new BoardViewCellClickedEvent(coords));
-
-        // Demo code only
-        this.getCell(coords).setDefaultColor(BoardViewCellColor.HIT);
     }
 
     /**

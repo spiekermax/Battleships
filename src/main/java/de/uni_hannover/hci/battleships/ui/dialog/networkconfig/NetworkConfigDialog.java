@@ -70,12 +70,20 @@ public class NetworkConfigDialog extends Dialog<NetworkConfigDialogResponse>
 
     /* METHODS */
 
-    private boolean checkIpAdress()
+    /**
+     * TODO
+     * @return
+     */
+    private boolean checkIpAdressInput()
     {
         return false;
     }
 
-    private boolean checkPort()
+    /**
+     * TODO
+     * @return
+     */
+    private boolean checkPortInput()
     {
         return false;
     }

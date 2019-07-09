@@ -3,6 +3,7 @@ package de.uni_hannover.hci.battleships.network.socket;
 // Internal dependencies
 import de.uni_hannover.hci.battleships.network.NetworkSocket;
 import de.uni_hannover.hci.battleships.network.event.NetworkSocketMessageReceivedEvent;
+import de.uni_hannover.hci.battleships.network.event.NetworkSocketVectorReceivedEvent;
 import de.uni_hannover.hci.battleships.util.Vector2i;
 
 // JavaFX
@@ -63,7 +64,7 @@ public class Server implements NetworkSocket
      * Methode zum Versenden von Nachrichten
      * @param string
      */
-    public void sendString(String string)
+    private void sendString(String string)
     {
         if(this.getOutputStreamWriter() == null)
         {
@@ -83,14 +84,22 @@ public class Server implements NetworkSocket
         }
     }
 
+    /**
+     * TODO
+     * @param message
+     */
     public void sendMessage(String message)
     {
-        this.sendString(message);
+        this.sendString("m: " + message);
     }
 
+    /**
+     * TODO
+     * @param vector
+     */
     public void sendVector(Vector2i vector)
     {
-        this.sendString(vector.toString());
+        this.sendString("v: " + vector);
     }
 
     /**
@@ -132,10 +141,16 @@ public class Server implements NetworkSocket
 
                 if(fetchedString != null)
                 {
-                    // if is message
-                    this.getEventEmitter().fireEvent(new NetworkSocketMessageReceivedEvent(fetchedString));
-
-                    // if is vector
+                    if(fetchedString.startsWith("m: "))
+                    {
+                        String fetchedMessage = fetchedString.substring("m: ".length());
+                        this.getEventEmitter().fireEvent(new NetworkSocketMessageReceivedEvent( fetchedMessage ));
+                    }
+                    else if(fetchedString.startsWith("v: "))
+                    {
+                        Vector2i fetchedVector = Vector2i.fromString( fetchedString.substring("v: ".length()) );
+                        this.getEventEmitter().fireEvent(new NetworkSocketVectorReceivedEvent( fetchedVector ));
+                    }
                 }
             }
         }

@@ -17,19 +17,19 @@ public class NetworkSocketVectorReceivedEvent extends Event
 
     /* ATTRIBUTES */
 
-    private final Vector2i _vector;
+    private final Vector2i _coords;
 
 
     /* LIFECYCLE */
 
     /**
      * TODO
-     * @param vector
+     * @param coords
      */
-    public NetworkSocketVectorReceivedEvent(Vector2i vector)
+    public NetworkSocketVectorReceivedEvent(Vector2i coords)
     {
         super(EVENT_TYPE);
-        this._vector = vector;
+        this._coords = coords;
     }
 
 
@@ -39,8 +39,8 @@ public class NetworkSocketVectorReceivedEvent extends Event
      * TODO
      * @return
      */
-    public Vector2i getVector()
+    public Vector2i getCoords()
     {
-        return this._vector;
+        return this._coords;
     }
 }

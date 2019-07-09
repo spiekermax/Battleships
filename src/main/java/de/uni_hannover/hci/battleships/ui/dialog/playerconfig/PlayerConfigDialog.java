@@ -47,7 +47,12 @@ public class PlayerConfigDialog extends Dialog<PlayerConfigDialogResponse>
             this.setResultConverter(buttonType ->
             {
                 if(buttonType == this.getConfirmButton())
-                    return new PlayerConfigDialogResponse(PlayerConfigDialogResponseType.VALID, this.getNameInputField().getText());
+                {
+                    if(this.checkNameInput())
+                        return new PlayerConfigDialogResponse(PlayerConfigDialogResponseType.VALID, this.getNameInputField().getText());
+                    else
+                        return new PlayerConfigDialogResponse(PlayerConfigDialogResponseType.INVALID, this.getNameInputField().getText());
+                }
                 else
                     return new PlayerConfigDialogResponse(PlayerConfigDialogResponseType.ABORT, null);
             });
@@ -56,6 +61,18 @@ public class PlayerConfigDialog extends Dialog<PlayerConfigDialogResponse>
         {
             throw new RuntimeException("ERROR: PlayerConfigDialog(): Failed to load main layout!", e);
         }
+    }
+
+
+    /* METHODS */
+
+    /**
+     * TODO
+     * @return
+     */
+    private boolean checkNameInput()
+    {
+        return !this.getNameInputField().getText().trim().equals("");
     }
 
 
