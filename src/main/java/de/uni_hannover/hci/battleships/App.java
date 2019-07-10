@@ -106,9 +106,9 @@ public class App extends Application
              *     userBoardView.display( this.getUserPlayer().getBoard() );
              * }
              *
-             * if( this.getUserPlayer().getAvailableShips().size() == 0 )
+             * if( this.getUserPlayer().getAvailableShips().size() == 0 ) // Possible replacement: this.getUserPlayer().hasAvailableShips()
              * {
-             *     this.getUserPlayer().setIsReady(true); // Possible replacement: this.getUserPlayer().hasAvailableShips()
+             *     this.getUserPlayer().setIsReady(true);
              *     userBoardView.setIsEnabled(false);
              *     enemyBoardView.setIsEnabled(true);
              * }
@@ -127,7 +127,7 @@ public class App extends Application
              * if( !this.getUserPlayer().isReady() || !this.getEnemyPlayer().isReady() ) return;
              * if( !this.getUserPlayer().hasTheMove() ) return;
              *
-             * this.getEnemyPlayer().getBoard().shoot(event.getCoords());
+             * this.getEnemyPlayer().shoot(event.getCoords());
              * enemyBoardView.display(this.getEnemyPlayer().getBoard());
              *
              * this.getNetworkSocket().sendVector(event.getCoords());
@@ -149,7 +149,7 @@ public class App extends Application
              * }
              * else
              * {
-             *     this.getUserPlayer().getBoard().shoot(event.getCoords());
+             *     this.getUserPlayer().shoot(event.getCoords());
              *     userBoardView.display(this.getUserPlayer().getBoard()));
              *
              *     this.getUserPlayer().setHasTheMove(true);
