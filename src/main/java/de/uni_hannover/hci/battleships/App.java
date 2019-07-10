@@ -64,7 +64,9 @@ public class App extends Application
         // UI-Komponenten
         ChatView chatView = (ChatView) root.lookup( R.id("chat") );
         BoardView userBoardView = (BoardView) root.lookup( R.id("player_board") );
-        BoardView enemyBoardView = (BoardView) root.lookup( R.id("enemy_board") ); enemyBoardView.setShipsVisible(false);
+        BoardView enemyBoardView = (BoardView) root.lookup( R.id("enemy_board") );
+        enemyBoardView.setShipsVisible(false);
+        enemyBoardView.setIsEnabled(false); // TODO: Optional: if board is disabled fire no events?
 
 
         // Ermittle gewünschte Netzwerkkonfiguration
@@ -79,7 +81,7 @@ public class App extends Application
         {
             if(event.getMessage().trim().equals("")) return;
 
-            this.getNetworkSocket().sendMessage(event.getMessage()); // TODO: replace with sendMessage()
+            this.getNetworkSocket().sendMessage(event.getMessage());
             chatView.addMessage(this.getUserPlayer(), event.getMessage());
         });
 
@@ -104,7 +106,12 @@ public class App extends Application
              *     userBoardView.display( this.getUserPlayer().getBoard() );
              * }
              *
-             * if( this.getUserPlayer().getAvailableShips().size() == 0 ) this.getUserPlayer().setIsReady(true); // Possible replacement: this.getUserPlayer().hasAvailableShips()
+             * if( this.getUserPlayer().getAvailableShips().size() == 0 )
+             * {
+             *     this.getUserPlayer().setIsReady(true); // Possible replacement: this.getUserPlayer().hasAvailableShips()
+             *     userBoardView.setIsEnabled(false);
+             *     enemyBoardView.setIsEnabled(true);
+             * }
              */
         });
         userBoardView.addEventHandler(BoardViewRightClickedEvent.EVENT_TYPE, event ->

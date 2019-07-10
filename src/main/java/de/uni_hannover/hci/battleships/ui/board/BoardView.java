@@ -32,6 +32,7 @@ public class BoardView extends GridPane
 
     /* ATTRIBUTES */
 
+    private boolean _isEnabled = true;
     private boolean _shipsVisible = true;
 
     private BoardViewCell _lastMouseTargetCell;
@@ -113,6 +114,9 @@ public class BoardView extends GridPane
 
         // Fire events
         this.fireEvent(new BoardViewCellHoveredEvent(currentMouseTargetCoords));
+
+        // Disable hover-effect if BoardView is disabled
+        if(!this.isEnabled()) return;
 
         // If the targeted cell changed
         if(currentMouseTargetCell != this.getLastMouseTargetCell())
@@ -249,6 +253,24 @@ public class BoardView extends GridPane
     private BoardViewCell getCell(Vector2i coords)
     {
         return this.getCell(coords.getX(), coords.getY());
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    public boolean isEnabled()
+    {
+        return this._isEnabled;
+    }
+
+    /**
+     * TODO
+     * @param newIsEnabled
+     */
+    public void setIsEnabled(boolean newIsEnabled)
+    {
+        this._isEnabled = newIsEnabled;
     }
 
     /**
