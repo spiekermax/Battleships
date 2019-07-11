@@ -5,6 +5,7 @@ import de.uni_hannover.hci.battleships.data.Player;
 import de.uni_hannover.hci.battleships.network.NetworkSocket;
 import de.uni_hannover.hci.battleships.network.event.NetworkSocketMessageReceivedEvent;
 import de.uni_hannover.hci.battleships.network.event.NetworkSocketVectorReceivedEvent;
+import de.uni_hannover.hci.battleships.network.event.ServerClientConnectedEvent;
 import de.uni_hannover.hci.battleships.network.socket.Client;
 import de.uni_hannover.hci.battleships.network.socket.Server;
 import de.uni_hannover.hci.battleships.ui.board.BoardView;
@@ -15,7 +16,7 @@ import de.uni_hannover.hci.battleships.ui.chat.event.ChatViewMessageConfirmedEve
 import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.NetworkConfigDialog;
 import de.uni_hannover.hci.battleships.ui.dialog.playerconfig.PlayerConfigDialog;
 import de.uni_hannover.hci.battleships.util.resource.R;
-import de.uni_hannover.hci.battleships.network.event.NetworkSocketNameReceivedEvent;
+import de.uni_hannover.hci.battleships.network.event.NetworkSocketUserNameReceivedEvent;
 
 // Java
 import java.io.IOException;
@@ -75,6 +76,28 @@ public class App extends Application
         // Ermittle gewünschte Netzwerkkonfiguration
         this.showNetworkConfigDialog();
 
+        // Gebe IP-Adresse und Port an
+        switch(this.getNetworkSocket().getType())
+        {
+            case CLIENT:
+                Client client = (Client) this.getNetworkSocket();
+                connectionInfoText.setText("IP: " + client.getServerIpAdress() + " Port: " + client.getPort());
+                break;
+            case SERVER:
+                Server server = (Server) this.getNetworkSocket();
+                connectionInfoText.setText("IP: " + server.getIpAdressString() + " Port: " + server.getPort());
+                break;
+        }
+
+
+        // Empfange User-Konfiguration des Gegners ~ Callback muss vor Benutzung gesetzt sein
+        this.getNetworkSocket().getEventEmitter().addEventHandler(NetworkSocketUserNameReceivedEvent.EVENT_TYPE, event ->
+        {
+            if(this.getEnemyPlayer() != null) throw new IllegalStateException("ERROR: App.start(): Player name has already been set!");
+
+            this._enemy = new Player(event.getUserName());
+        });
+
         // Ermittle gewünschte Charakterkonfiguration
         this.showPlayerConfigDialog();
 
@@ -92,7 +115,7 @@ public class App extends Application
         // Zeige empfangene Chat-Nachrichten
         this.getNetworkSocket().getEventEmitter().addEventHandler(NetworkSocketMessageReceivedEvent.EVENT_TYPE, event ->
         {
-            chatView.addMessage(new Player("TODO"), event.getMessage()); // TODO: retrieve enemy player name
+            chatView.addMessage(this.getEnemyPlayer(), event.getMessage()); // TODO: retrieve enemy player name
         });
 
 
@@ -225,6 +248,16 @@ public class App extends Application
             }
 
             this._user = new Player(playerConfigResponse.getName());
+            switch(this.getNetworkSocket().getType())
+            {
+                case CLIENT:
+                    this.getNetworkSocket().sendUserName(playerConfigResponse.getName());
+                    break;
+                case SERVER:
+                    this.getNetworkSocket().getEventEmitter().addEventHandler(ServerClientConnectedEvent.EVENT_TYPE, event ->
+                            this.getNetworkSocket().sendUserName(playerConfigResponse.getName()));
+                    break;
+            }
         });
     }
 

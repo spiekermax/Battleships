@@ -55,7 +55,7 @@
             GridPane.rowIndex="4"
             GridPane.halignment="LEFT"
             GridPane.valignment="BOTTOM"
-            text="IP: 176.0.1.1 Port: 1234"
+            text="IP: ??? Port: ???"
             fill="#515151">
 
             <GridPane.margin>

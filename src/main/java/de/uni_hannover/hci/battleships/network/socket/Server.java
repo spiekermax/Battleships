@@ -2,9 +2,11 @@ package de.uni_hannover.hci.battleships.network.socket;
 
 // Internal dependencies
 import de.uni_hannover.hci.battleships.network.NetworkSocket;
+import de.uni_hannover.hci.battleships.network.NetworkSocketType;
 import de.uni_hannover.hci.battleships.network.event.NetworkSocketMessageReceivedEvent;
-import de.uni_hannover.hci.battleships.network.event.NetworkSocketNameReceivedEvent;
+import de.uni_hannover.hci.battleships.network.event.NetworkSocketUserNameReceivedEvent;
 import de.uni_hannover.hci.battleships.network.event.NetworkSocketVectorReceivedEvent;
+import de.uni_hannover.hci.battleships.network.event.ServerClientConnectedEvent;
 import de.uni_hannover.hci.battleships.util.Vector2i;
 
 // JavaFX
@@ -103,8 +105,13 @@ public class Server implements NetworkSocket
         this.sendString("v: " + vector);
     }
 
-    public void sendName(String name) {
-        this.sendString("u: " + name);
+    /**
+     * TODO
+     * @param userName
+     */
+    public void sendUserName(String userName)
+    {
+        this.sendString("u: " + userName);
     }
 
     /**
@@ -119,6 +126,7 @@ public class Server implements NetworkSocket
                 this._socket = this.getServerSocket().accept();
                 this._inputStreamReader = new BufferedReader(new InputStreamReader(this.getSocket().getInputStream()));
                 this._outputStreamWriter = new BufferedWriter(new OutputStreamWriter(this.getSocket().getOutputStream()));
+                this.getEventEmitter().fireEvent(new ServerClientConnectedEvent());
 
                 this.runFetchLoop();
             }
@@ -153,14 +161,13 @@ public class Server implements NetworkSocket
                     }
                     else if(fetchedString.startsWith("v: "))
                     {
-                        System.out.print(fetchedString);
                         Vector2i fetchedVector = Vector2i.fromString( fetchedString.substring("v: ".length()) );
                         this.getEventEmitter().fireEvent(new NetworkSocketVectorReceivedEvent( fetchedVector ));
                     }
                     else if(fetchedString.startsWith("u: "))
                     {
                         String fetchedName = fetchedString.substring("u: ".length());
-                        this.getEventEmitter().fireEvent(new NetworkSocketNameReceivedEvent( fetchedName));
+                        this.getEventEmitter().fireEvent(new NetworkSocketUserNameReceivedEvent( fetchedName ));
                     }
                 }
             }
@@ -209,6 +216,15 @@ public class Server implements NetworkSocket
      * TODO
      * @return
      */
+    public NetworkSocketType getType()
+    {
+        return NetworkSocketType.SERVER;
+    }
+
+    /**
+     * TODO
+     * @return
+     */
     public int getPort()
     {
         return this._port;
@@ -222,6 +238,16 @@ public class Server implements NetworkSocket
     public InetAddress getIpAdress() throws UnknownHostException
     {
         return InetAddress.getLocalHost();
+    }
+
+    /**
+     * TODO
+     * @return
+     * @throws UnknownHostException
+     */
+    public String getIpAdressString() throws UnknownHostException
+    {
+        return InetAddress.getLocalHost().getHostAddress();
     }
 
     /**

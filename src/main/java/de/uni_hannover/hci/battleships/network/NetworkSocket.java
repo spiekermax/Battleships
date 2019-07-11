@@ -23,7 +23,19 @@ public interface NetworkSocket
 
     /**
      * TODO
+     * @param userName
+     */
+    public void sendUserName(String userName);
+
+    /**
+     * TODO
      * @return
      */
     public Node getEventEmitter();
+
+    /**
+     * TODO
+     * @return
+     */
+    public NetworkSocketType getType();
 }

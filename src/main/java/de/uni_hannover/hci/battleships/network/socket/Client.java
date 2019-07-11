@@ -2,8 +2,9 @@ package de.uni_hannover.hci.battleships.network.socket;
 
 // Internal dependencies
 import de.uni_hannover.hci.battleships.network.NetworkSocket;
+import de.uni_hannover.hci.battleships.network.NetworkSocketType;
 import de.uni_hannover.hci.battleships.network.event.NetworkSocketMessageReceivedEvent;
-import de.uni_hannover.hci.battleships.network.event.NetworkSocketNameReceivedEvent;
+import de.uni_hannover.hci.battleships.network.event.NetworkSocketUserNameReceivedEvent;
 import de.uni_hannover.hci.battleships.network.event.NetworkSocketVectorReceivedEvent;
 import de.uni_hannover.hci.battleships.util.Vector2i;
 
@@ -26,7 +27,8 @@ public class Client implements NetworkSocket
 
     private final AnchorPane _eventEmitter = new AnchorPane();
 
-    private int _port;
+    private final int _port;
+    private final String _serverIpAdress;
     private Socket _socket;
     private BufferedReader _inputStreamReader;
     private BufferedWriter _outputStreamWriter;
@@ -41,6 +43,7 @@ public class Client implements NetworkSocket
     public Client(int port, String ipAddress)
     {
         this._port = port;
+        this._serverIpAdress = ipAddress;
 
         try
         {
@@ -97,8 +100,13 @@ public class Client implements NetworkSocket
         this.sendString("v: " + vector);
     }
 
-    public void sendName(String name) {
-        this.sendString("u: " + name);
+    /**
+     * TODO
+     * @param userName
+     */
+    public void sendUserName(String userName)
+    {
+        this.sendString("u: " + userName);
     }
 
     /**
@@ -126,10 +134,10 @@ public class Client implements NetworkSocket
                             Vector2i fetchedVector = Vector2i.fromString( fetchedString.substring("v: ".length()) );
                             this.getEventEmitter().fireEvent(new NetworkSocketVectorReceivedEvent( fetchedVector ));
                         }
-                        else if (fetchedString.startsWith("u: "))
+                        else if(fetchedString.startsWith("u: "))
                         {
                             String fetchedName = fetchedString.substring(("u: ".length()));
-                            this.getEventEmitter().fireEvent(new NetworkSocketNameReceivedEvent( fetchedName));
+                            this.getEventEmitter().fireEvent(new NetworkSocketUserNameReceivedEvent( fetchedName ));
                         }
                     }
                 }
@@ -173,6 +181,15 @@ public class Client implements NetworkSocket
     /* GETTERS & SETTERS */
 
     /**
+     * TODO
+     * @return
+     */
+    public NetworkSocketType getType()
+    {
+        return NetworkSocketType.CLIENT;
+    }
+
+    /**
      * Methode die den Port zurückgibt
      * @return
      */
@@ -184,11 +201,30 @@ public class Client implements NetworkSocket
     /**
      * TODO
      * @return
+     */
+    public String getServerIpAdress()
+    {
+        return this._serverIpAdress;
+    }
+
+    /**
+     * TODO
+     * @return
      * @throws UnknownHostException
      */
     public InetAddress getIpAdress() throws UnknownHostException
     {
         return InetAddress.getLocalHost();
+    }
+
+    /**
+     * TODO
+     * @return
+     * @throws UnknownHostException
+     */
+    public String getIpAdressString() throws UnknownHostException
+    {
+        return InetAddress.getLocalHost().getHostAddress();
     }
 
     /**
