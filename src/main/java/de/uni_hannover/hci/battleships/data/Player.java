@@ -10,6 +10,8 @@ public class Player {
     protected Board myBoard;
     protected Board enemyBoard;
     protected boolean myTurn;
+    protected boolean isReady;
+    //protected List availableShips;
 
     protected Ship[] myShips;
 
@@ -21,8 +23,17 @@ public class Player {
         this.enemyBoard = new Board(10,10);
         this.myTurn = false;
         this.name = name;
+        this.isReady = false;
 
         this.myShips = new Ship[10];
+    }
+
+    public boolean getIsReady() {
+        return this.isReady;
+    }
+
+    public void setIsReady(boolean b) {
+        this.isReady = b;
     }
     
     public String getName() { return this.name; }
@@ -38,8 +49,8 @@ public class Player {
         return null;
     }
 
-    public boolean addShip(Vector2i[] cor) {
-        Ship s = myBoard.addShip(cor);
+    public boolean addShip(Vector2i cor, Orientation or, int length) {
+        Ship s = myBoard.addShip(cor, or, length);
         for(int i = 0; i < myShips.length; i++) {
             if(myShips[i] != null) {
                 myShips[i] = s;

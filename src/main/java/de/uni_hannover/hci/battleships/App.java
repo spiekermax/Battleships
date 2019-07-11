@@ -125,14 +125,14 @@ public class App extends Application
         {
             /*
              * if( !this.getUserPlayer().isReady() || !this.getEnemyPlayer().isReady() ) return;
-             * if( !this.getUserPlayer().hasTheMove() ) return;
+             * if( !this.getUserPlayer().turn() ) return;
              *
-             * this.getEnemyPlayer().shoot(event.getCoords());
+             * this.getEnemyPlayer().hasBeenShot(event.getCoords());
              * enemyBoardView.display(this.getEnemyPlayer().getBoard());
              *
              * this.getNetworkSocket().sendVector(event.getCoords());
-             * this.getUserPlayer().setHasTheMove(false); // TODO: Initialwerte für 'hasTheMove' setzen (einer true, einer false)
-             * this.getEnemyPlayer().setHasTheMove(true);
+             * this.getUserPlayer().switchTurn()); // TODO: Initialwerte für 'hasTheMove' setzen (einer true, einer false)
+             * //this.getEnemyPlayer().setHasTheMove(true);
              */
         });
 
@@ -149,11 +149,11 @@ public class App extends Application
              * }
              * else
              * {
-             *     this.getUserPlayer().shoot(event.getCoords());
+             *     this.getUserPlayer().hasBeenShot(event.getCoords());
              *     userBoardView.display(this.getUserPlayer().getBoard()));
              *
-             *     this.getUserPlayer().setHasTheMove(true);
-             *     this.getEnemyPlayer().setHasTheMove(false);
+             *     this.getUserPlayer().switchTurn();
+             *     this.getEnemyPlayer().switchTurn();
              * }
              */
         });
