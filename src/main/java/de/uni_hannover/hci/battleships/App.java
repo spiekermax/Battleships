@@ -25,6 +25,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 
@@ -62,6 +63,7 @@ public class App extends Application
         primaryStage.show();
 
         // UI-Komponenten
+        Text connectionInfoText = (Text) root.lookup( R.id("connection_info_text") );
         ChatView chatView = (ChatView) root.lookup( R.id("chat") );
         BoardView userBoardView = (BoardView) root.lookup( R.id("player_board") );
         BoardView enemyBoardView = (BoardView) root.lookup( R.id("enemy_board") );

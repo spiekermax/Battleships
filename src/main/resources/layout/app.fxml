@@ -6,6 +6,9 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
 
 
 <GridPane
@@ -45,6 +48,22 @@
 
         <!-- Player board -->
         <BoardView fx:id="player_board" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+        <!-- IP & Port -->
+        <Text
+            fx:id="connection_info_text"
+            GridPane.rowIndex="4"
+            GridPane.halignment="LEFT"
+            GridPane.valignment="BOTTOM"
+            text="IP: 176.0.1.1 Port: 1234"
+            fill="#515151">
+
+            <GridPane.margin>
+                <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+            </GridPane.margin>
+            <font><Font size="10.0" /></font>
+
+        </Text>
 
     </GridPane>
 
