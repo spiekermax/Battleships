@@ -15,6 +15,7 @@ import de.uni_hannover.hci.battleships.ui.chat.event.ChatViewMessageConfirmedEve
 import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.NetworkConfigDialog;
 import de.uni_hannover.hci.battleships.ui.dialog.playerconfig.PlayerConfigDialog;
 import de.uni_hannover.hci.battleships.util.resource.R;
+import de.uni_hannover.hci.battleships.network.event.NetworkSocketNameReceivedEvent;
 
 // Java
 import java.io.IOException;
@@ -87,6 +88,7 @@ public class App extends Application
             chatView.addMessage(this.getUserPlayer(), event.getMessage());
         });
 
+
         // Zeige empfangene Chat-Nachrichten
         this.getNetworkSocket().getEventEmitter().addEventHandler(NetworkSocketMessageReceivedEvent.EVENT_TYPE, event ->
         {
@@ -100,11 +102,11 @@ public class App extends Application
             /*
              * if( this.getUserPlayer().isReady() ) return;
              *
-             * if( this.getUserPlayer().getBoard().addShip(event.getCoords(), this.getUserPlayer().getAvailableShips().get(0)) )
+             * if( this.getUserPlayer().getBoard().addShip(event.getCoords(), this.getUserPlayer().getAvailableShips().get(0)) )    //Braucht keinen Parameter availableShip, wird automatisch übergeben
              * {
              *     this.getNetworkSocket().sendVector(event.getCoords());
              *
-             *     this.getUserPlayer().removeFirstAvailableShip();
+             *     this.getUserPlayer().removeFirstAvailableShip(); //Löscht sich automatisch beim hinzufügen eines Schiffes
              *     userBoardView.display( this.getUserPlayer().getBoard() );
              * }
              *
@@ -127,14 +129,14 @@ public class App extends Application
         {
             /*
              * if( !this.getUserPlayer().isReady() || !this.getEnemyPlayer().isReady() ) return;
-             * if( !this.getUserPlayer().hasTheMove() ) return;
+             * if( !this.getUserPlayer().turn() ) return;
              *
-             * this.getEnemyPlayer().shoot(event.getCoords());
+             * this.getEnemyPlayer().hasBeenShot(event.getCoords());
              * enemyBoardView.display(this.getEnemyPlayer().getBoard());
              *
              * this.getNetworkSocket().sendVector(event.getCoords());
-             * this.getUserPlayer().setHasTheMove(false); // TODO: Initialwerte für 'hasTheMove' setzen (einer true, einer false)
-             * this.getEnemyPlayer().setHasTheMove(true);
+             * this.getUserPlayer().switchTurn()); // TODO: Initialwerte für 'hasTheMove' setzen (einer true, einer false)
+             * //this.getEnemyPlayer().setHasTheMove(true);
              */
         });
 
@@ -145,17 +147,17 @@ public class App extends Application
              * if( !this.getEnemyPlayer().isReady() )
              * {
              *     this.getEnemyPlayer().getBoard().addShip(event.getCoords(), this.getEnemyPlayer().getAvailableShips().get(0)); // Legal-check is redundant
-             *     this.getEnemyPlayer().removeFirstAvailableShip();
+             *     this.getEnemyPlayer().removeFirstAvailableShip(); //Macht von allein(siehe oben)
              *
              *     if ( this.getUserPlayer().getAvailableShips().size() == 0 ) this.getEnemyPlayer().setIsReady(true);
              * }
              * else
              * {
-             *     this.getUserPlayer().shoot(event.getCoords());
+             *     this.getUserPlayer().hasBeenShot(event.getCoords());
              *     userBoardView.display(this.getUserPlayer().getBoard()));
              *
-             *     this.getUserPlayer().setHasTheMove(true);
-             *     this.getEnemyPlayer().setHasTheMove(false);
+             *     this.getUserPlayer().switchTurn();
+             *     this.getEnemyPlayer().switchTurn();
              * }
              */
         });

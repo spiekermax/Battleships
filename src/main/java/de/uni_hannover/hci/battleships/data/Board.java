@@ -2,6 +2,8 @@ package de.uni_hannover.hci.battleships.data;
 
 import de.uni_hannover.hci.battleships.util.Vector2i;
 
+import java.util.Vector;
+
 /**
  * Diese Klasse beschreibt ein Spielfeld
  */
@@ -39,8 +41,40 @@ public class Board {
         }
     }
 
-    public Ship addShip(Vector2i[] cor) {
-        return new Ship(cor, this);
+
+    public Ship addShip(Vector2i cor, Orientation or, int length) {
+        int x = cor.getX();
+        int y = cor.getY();
+        Vector2i[] arr = new Vector2i[length];
+        arr[0] = cor;
+
+        if(or == Orientation.DOWN) {    //Wenn Schiff runter geht
+            if(outOfBounds(x, y+length)) {  //Prüft, ob es über die Grenzen hinausgeht
+                return null;
+            }
+            for(int i = 1; i < length; i++) {   //Erstelle die Koordinaten des Schiffes
+                arr[i] = new Vector2i(x, y+i);
+            }
+            int[] dir = getDirection(arr);
+            if(hasNoNeighbours(arr, dir)) { //Prüft, dass keine NachbarSchiffe vorhanden sind
+                return new Ship(arr, this);
+            } else {
+                return null;
+            }
+        } else {        //Wenn Schiff nach rechts geht
+            if(outOfBounds(x+length, y)) {  //Prüft, ob es über die Grenzen hinausgeht
+                return null;
+            }
+            for(int i = 1; i < length; i++) {   //Erstellt die Koordinaten des Schiffes
+                arr[i] = new Vector2i(x+i, y);
+            }
+            int[] dir = getDirection(arr);
+            if(hasNoNeighbours(arr, dir)) { //Prüft, dass keine NachbarSchiffe vorhanden sind
+                return new Ship(arr, this);
+            } else {
+                return null;
+            }
+        }
     }
 
     public void setShip(int x, int y) {
@@ -63,6 +97,16 @@ public class Board {
 
     public boolean outOfBounds(int x, int y) {
         return !(x >= 0 && x < board.length && y >= 0 && y < board[0].length);
+    }
+
+    public Board copyBoard() {
+        Board b = new Board(this.getWidth(), this.getHeight());
+        for(int i = 0; i < this.getWidth(); i++) {
+            for(int j = 0; j < this.getHeight(); j++) {
+                b.board[i][j] = this.board[i][j];
+            }
+        }
+        return b;
     }
 
     public boolean isShipOnField(int x, int y) {
