@@ -15,12 +15,12 @@
     <Text>IP-Adresse</Text>
     <TextField
         fx:id="_ipAdressInputField"
-        promptText="Optional" />
+        promptText="Client only" />
 
     <!-- Port -->
     <Text>Port</Text>
     <TextField
         fx:id="_portInputField"
-        promptText="Optional" />
+        promptText="Required" />
 
 </VBox>
