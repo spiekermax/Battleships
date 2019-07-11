@@ -3,6 +3,7 @@ package de.uni_hannover.hci.battleships.network.socket;
 // Internal dependencies
 import de.uni_hannover.hci.battleships.network.NetworkSocket;
 import de.uni_hannover.hci.battleships.network.event.NetworkSocketMessageReceivedEvent;
+import de.uni_hannover.hci.battleships.network.event.NetworkSocketNameReceivedEvent;
 import de.uni_hannover.hci.battleships.network.event.NetworkSocketVectorReceivedEvent;
 import de.uni_hannover.hci.battleships.util.Vector2i;
 
@@ -96,6 +97,10 @@ public class Client implements NetworkSocket
         this.sendString("v: " + vector);
     }
 
+    public void sendName(String name) {
+        this.sendString("u: " + name);
+    }
+
     /**
      * TODO
      */
@@ -120,6 +125,11 @@ public class Client implements NetworkSocket
                         {
                             Vector2i fetchedVector = Vector2i.fromString( fetchedString.substring("v: ".length()) );
                             this.getEventEmitter().fireEvent(new NetworkSocketVectorReceivedEvent( fetchedVector ));
+                        }
+                        else if (fetchedString.startsWith("u: "))
+                        {
+                            String fetchedName = fetchedString.substring(("u: ".length()));
+                            this.getEventEmitter().fireEvent(new NetworkSocketNameReceivedEvent( fetchedName));
                         }
                     }
                 }

@@ -15,6 +15,7 @@ import de.uni_hannover.hci.battleships.ui.chat.event.ChatViewMessageConfirmedEve
 import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.NetworkConfigDialog;
 import de.uni_hannover.hci.battleships.ui.dialog.playerconfig.PlayerConfigDialog;
 import de.uni_hannover.hci.battleships.util.resource.R;
+import de.uni_hannover.hci.battleships.network.event.NetworkSocketNameReceivedEvent;
 
 // Java
 import java.io.IOException;
@@ -84,6 +85,7 @@ public class App extends Application
             this.getNetworkSocket().sendMessage(event.getMessage());
             chatView.addMessage(this.getUserPlayer(), event.getMessage());
         });
+
 
         // Zeige empfangene Chat-Nachrichten
         this.getNetworkSocket().getEventEmitter().addEventHandler(NetworkSocketMessageReceivedEvent.EVENT_TYPE, event ->
