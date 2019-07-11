@@ -2,6 +2,8 @@ package de.uni_hannover.hci.battleships.data;
 
 import de.uni_hannover.hci.battleships.util.Vector2i;
 
+import java.util.ArrayList;
+
 /**
  * Diese Klasse beschreibt einen Spieler.
  */
@@ -11,7 +13,7 @@ public class Player {
     protected Board enemyBoard;
     protected boolean myTurn;
     protected boolean isReady;
-    //protected List availableShips;
+    protected ArrayList<Integer> availableShips;
 
     protected Ship[] myShips;
 
@@ -24,6 +26,18 @@ public class Player {
         this.myTurn = false;
         this.name = name;
         this.isReady = false;
+
+        this.availableShips = new ArrayList<>();
+        this.availableShips.add(5);
+        this.availableShips.add(4);
+        this.availableShips.add(4);
+        this.availableShips.add(3);
+        this.availableShips.add(3);
+        this.availableShips.add(3);
+        this.availableShips.add(2);
+        this.availableShips.add(2);
+        this.availableShips.add(2);
+        this.availableShips.add(2);
 
         this.myShips = new Ship[10];
     }
@@ -49,12 +63,15 @@ public class Player {
         return null;
     }
 
-    public boolean addShip(Vector2i cor, Orientation or, int length) {
-        Ship s = myBoard.addShip(cor, or, length);
-        for(int i = 0; i < myShips.length; i++) {
-            if(myShips[i] != null) {
-                myShips[i] = s;
-                return true;
+    public boolean addShip(Vector2i cor, Orientation or) {
+        Ship s = myBoard.addShip(cor, or, availableShips.get(0));
+        if(s != null) {
+            availableShips.remove(0);
+            for (int i = 0; i < myShips.length; i++) {
+                if (myShips[i] != null) {
+                    myShips[i] = s;
+                    return true;
+                }
             }
         }
         return false;
@@ -124,32 +141,5 @@ public class Player {
                 myBoard.board[x][y] = FieldMode.SHOT;
             }
         }
-    }
-
-    /**
-     * Diese Funktion prüft, ob die angegebenen Schiffe des Spielers, den Spielregeln entsprechen.
-     * D.h. dass es die richtige Anzahl an Schiffen mit den jeweiligen richtigen Längen gibt.
-     * @return Gibt einen boolean zurück, ob dies stimmt.
-     */
-    public boolean validShipConstellation() {
-        int two = 0;
-        int three = 0;
-        int four = 0;
-        int five = 0;
-        for(int i = 0; i < myShips.length; i++) {
-            if(myShips[i] != null) {
-                switch(myShips[i].length) {
-                    case 2: two++; break;
-                    case 3: three++; break;
-                    case 4: four++; break;
-                    case 5: five++; break;
-                    default: break;
-                }
-            }
-        }
-        return five == 1 &&
-                four == 2 &&
-                three == 3 &&
-                two == 4;
     }
 }

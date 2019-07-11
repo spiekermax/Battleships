@@ -41,6 +41,7 @@ public class Board {
         }
     }
 
+
     public Ship addShip(Vector2i cor, Orientation or, int length) {
         int x = cor.getX();
         int y = cor.getY();
@@ -54,7 +55,12 @@ public class Board {
             for(int i = 1; i < length; i++) {   //Erstelle die Koordinaten des Schiffes
                 arr[i] = new Vector2i(x, y+i);
             }
-            return new Ship(arr, this);
+            int[] dir = getDirection(arr);
+            if(hasNoNeighbours(arr, dir)) { //Prüft, dass keine NachbarSchiffe vorhanden sind
+                return new Ship(arr, this);
+            } else {
+                return null;
+            }
         } else {        //Wenn Schiff nach rechts geht
             if(outOfBounds(x+length, y)) {  //Prüft, ob es über die Grenzen hinausgeht
                 return null;
@@ -62,7 +68,12 @@ public class Board {
             for(int i = 1; i < length; i++) {   //Erstellt die Koordinaten des Schiffes
                 arr[i] = new Vector2i(x+i, y);
             }
-            return new Ship(arr, this);
+            int[] dir = getDirection(arr);
+            if(hasNoNeighbours(arr, dir)) { //Prüft, dass keine NachbarSchiffe vorhanden sind
+                return new Ship(arr, this);
+            } else {
+                return null;
+            }
         }
     }
 

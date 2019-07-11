@@ -98,11 +98,11 @@ public class App extends Application
             /*
              * if( this.getUserPlayer().isReady() ) return;
              *
-             * if( this.getUserPlayer().getBoard().addShip(event.getCoords(), this.getUserPlayer().getAvailableShips().get(0)) )
+             * if( this.getUserPlayer().getBoard().addShip(event.getCoords(), this.getUserPlayer().getAvailableShips().get(0)) )    //Braucht keinen Parameter availableShip, wird automatisch übergeben
              * {
              *     this.getNetworkSocket().sendVector(event.getCoords());
              *
-             *     this.getUserPlayer().removeFirstAvailableShip();
+             *     this.getUserPlayer().removeFirstAvailableShip(); //Löscht sich automatisch beim hinzufügen eines Schiffes
              *     userBoardView.display( this.getUserPlayer().getBoard() );
              * }
              *
@@ -143,7 +143,7 @@ public class App extends Application
              * if( !this.getEnemyPlayer().isReady() )
              * {
              *     this.getEnemyPlayer().getBoard().addShip(event.getCoords(), this.getEnemyPlayer().getAvailableShips().get(0)); // Legal-check is redundant
-             *     this.getEnemyPlayer().removeFirstAvailableShip();
+             *     this.getEnemyPlayer().removeFirstAvailableShip(); //Macht von allein(siehe oben)
              *
              *     if ( this.getUserPlayer().getAvailableShips().size() == 0 ) this.getEnemyPlayer().setIsReady(true);
              * }
