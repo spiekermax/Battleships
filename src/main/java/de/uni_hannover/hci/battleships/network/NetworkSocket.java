@@ -11,6 +11,11 @@ public interface NetworkSocket
 {
     /**
      * TODO
+     */
+    public void sendHandshake();
+
+    /**
+     * TODO
      * @param message
      */
     public void sendMessage(String message);

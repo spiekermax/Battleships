@@ -1,7 +1,7 @@
 package de.uni_hannover.hci.battleships.ui.board;
 
 // Internal dependencies
-import de.uni_hannover.hci.battleships.data.Board;
+import de.uni_hannover.hci.battleships.datav2.Board;
 import de.uni_hannover.hci.battleships.ui.board.cell.BoardViewCell;
 import de.uni_hannover.hci.battleships.ui.board.cell.BoardViewCellColor;
 import de.uni_hannover.hci.battleships.ui.board.event.BoardViewCellClickedEvent;
@@ -182,9 +182,9 @@ public class BoardView extends GridPane
                 if(this.getCell(x, y) == null)
                     throw new IndexOutOfBoundsException("ERROR: BoardView.display(): Board cell at " + new Vector2i(x ,y) + "does not exist!");
 
-                switch(board.getField(x, y))
+                switch(board.getCell(x, y))
                 {
-                    case OCEAN:
+                    case WATER:
                         this.getCell(x, y).setDefaultColor(BoardViewCellColor.WATER);
                         break;
                     case SHIP:
@@ -193,10 +193,10 @@ public class BoardView extends GridPane
                         else
                             this.getCell(x, y).setDefaultColor(BoardViewCellColor.WATER);
                         break;
-                    case SANKED_SHIP: // <- Bitte, bitte Grammatikfehler korregieren :/
+                    case HIT:
                         this.getCell(x, y).setDefaultColor(BoardViewCellColor.HIT);
                         break;
-                    case SHOT:
+                    case MISS:
                         this.getCell(x, y).setDefaultColor(BoardViewCellColor.MISS);
                         break;
                 }

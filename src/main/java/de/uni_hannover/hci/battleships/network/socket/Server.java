@@ -6,7 +6,7 @@ import de.uni_hannover.hci.battleships.network.NetworkSocketType;
 import de.uni_hannover.hci.battleships.network.event.NetworkSocketMessageReceivedEvent;
 import de.uni_hannover.hci.battleships.network.event.NetworkSocketUserNameReceivedEvent;
 import de.uni_hannover.hci.battleships.network.event.NetworkSocketVectorReceivedEvent;
-import de.uni_hannover.hci.battleships.network.event.ServerClientConnectedEvent;
+import de.uni_hannover.hci.battleships.network.event.NetworkSocketHandshakeReceivedEvent;
 import de.uni_hannover.hci.battleships.util.Vector2i;
 
 // JavaFX
@@ -34,6 +34,8 @@ public class Server implements NetworkSocket
     private Socket _socket;
     private BufferedReader _inputStreamReader;
     private BufferedWriter _outputStreamWriter;
+
+    private boolean _isClientReady = false;
 
 
     /* LIFECYCLE */
@@ -64,17 +66,19 @@ public class Server implements NetworkSocket
     /* METHODS */
 
     /**
+     * TODO
+     */
+    public void sendHandshake()
+    {
+        this.sendString("handshake");
+    }
+
+    /**
      * Methode zum Versenden von Nachrichten
      * @param string
      */
     private void sendString(String string)
     {
-        if(this.getOutputStreamWriter() == null)
-        {
-            System.out.println("INFO: Server(): No client connected!");
-            return;
-        }
-
         try
         {
             this.getOutputStreamWriter().write(string + "\n");
@@ -126,8 +130,8 @@ public class Server implements NetworkSocket
                 this._socket = this.getServerSocket().accept();
                 this._inputStreamReader = new BufferedReader(new InputStreamReader(this.getSocket().getInputStream()));
                 this._outputStreamWriter = new BufferedWriter(new OutputStreamWriter(this.getSocket().getOutputStream()));
-                this.getEventEmitter().fireEvent(new ServerClientConnectedEvent());
 
+                this.sendHandshake();
                 this.runFetchLoop();
             }
             catch(IOException e)
@@ -154,7 +158,12 @@ public class Server implements NetworkSocket
 
                 if(fetchedString != null)
                 {
-                    if(fetchedString.startsWith("m: "))
+                    if(fetchedString.equals("handshake"))
+                    {
+                        this._isClientReady = true;
+                        this.getEventEmitter().fireEvent(new NetworkSocketHandshakeReceivedEvent());
+                    }
+                    else if(fetchedString.startsWith("m: "))
                     {
                         String fetchedMessage = fetchedString.substring("m: ".length());
                         this.getEventEmitter().fireEvent(new NetworkSocketMessageReceivedEvent( fetchedMessage ));
@@ -311,5 +320,14 @@ public class Server implements NetworkSocket
     private BufferedWriter getOutputStreamWriter()
     {
         return this._outputStreamWriter;
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    public boolean isClientReady()
+    {
+        return this._isClientReady;
     }
 }

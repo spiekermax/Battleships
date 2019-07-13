@@ -3,6 +3,7 @@ package de.uni_hannover.hci.battleships.network.socket;
 // Internal dependencies
 import de.uni_hannover.hci.battleships.network.NetworkSocket;
 import de.uni_hannover.hci.battleships.network.NetworkSocketType;
+import de.uni_hannover.hci.battleships.network.event.NetworkSocketHandshakeReceivedEvent;
 import de.uni_hannover.hci.battleships.network.event.NetworkSocketMessageReceivedEvent;
 import de.uni_hannover.hci.battleships.network.event.NetworkSocketUserNameReceivedEvent;
 import de.uni_hannover.hci.battleships.network.event.NetworkSocketVectorReceivedEvent;
@@ -32,6 +33,8 @@ public class Client implements NetworkSocket
     private Socket _socket;
     private BufferedReader _inputStreamReader;
     private BufferedWriter _outputStreamWriter;
+
+    private boolean _isServerReady = false;
 
 
     /* LIFECYCLE */
@@ -63,6 +66,14 @@ public class Client implements NetworkSocket
 
 
     /* METHODS */
+
+    /**
+     * TODO
+     */
+    public void sendHandshake()
+    {
+        this.sendString("handshake");
+    }
 
     /**
      * TODO
@@ -124,7 +135,12 @@ public class Client implements NetworkSocket
 
                     if(fetchedString != null)
                     {
-                        if(fetchedString.startsWith("m: "))
+                        if(fetchedString.equals("handshake"))
+                        {
+                            this._isServerReady = true;
+                            this.getEventEmitter().fireEvent(new NetworkSocketHandshakeReceivedEvent());
+                        }
+                        else if(fetchedString.startsWith("m: "))
                         {
                             String fetchedMessage = fetchedString.substring("m: ".length());
                             this.getEventEmitter().fireEvent(new NetworkSocketMessageReceivedEvent( fetchedMessage ));
@@ -279,5 +295,14 @@ public class Client implements NetworkSocket
     private BufferedWriter getOutputStreamWriter()
     {
         return this._outputStreamWriter;
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    public boolean isServerReady()
+    {
+        return this._isServerReady;
     }
 }

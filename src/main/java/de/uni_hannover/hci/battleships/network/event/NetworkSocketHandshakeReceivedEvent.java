@@ -5,11 +5,11 @@ import javafx.event.Event;
 import javafx.event.EventType;
 
 
-public class ServerClientConnectedEvent extends Event
+public class NetworkSocketHandshakeReceivedEvent extends Event
 {
     /* CONSTANTS */
 
-    public static final EventType<ServerClientConnectedEvent> EVENT_TYPE = new EventType<>("server-client-connected");
+    public static final EventType<NetworkSocketHandshakeReceivedEvent> EVENT_TYPE = new EventType<>("server-client-connected");
 
 
     /* LIFECYCLE */
@@ -17,7 +17,7 @@ public class ServerClientConnectedEvent extends Event
     /**
      * TODO
      */
-    public ServerClientConnectedEvent()
+    public NetworkSocketHandshakeReceivedEvent()
     {
         super(EVENT_TYPE);
     }
