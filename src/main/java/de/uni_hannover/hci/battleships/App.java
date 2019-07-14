@@ -3,9 +3,7 @@ package de.uni_hannover.hci.battleships;
 // Internal dependencies
 import de.uni_hannover.hci.battleships.datav2.Player;
 import de.uni_hannover.hci.battleships.network.NetworkSocket;
-import de.uni_hannover.hci.battleships.network.event.NetworkSocketMessageReceivedEvent;
-import de.uni_hannover.hci.battleships.network.event.NetworkSocketVectorReceivedEvent;
-import de.uni_hannover.hci.battleships.network.event.NetworkSocketHandshakeReceivedEvent;
+import de.uni_hannover.hci.battleships.network.event.*;
 import de.uni_hannover.hci.battleships.network.socket.Client;
 import de.uni_hannover.hci.battleships.network.socket.Server;
 import de.uni_hannover.hci.battleships.ui.board.BoardView;
@@ -17,7 +15,6 @@ import de.uni_hannover.hci.battleships.ui.dialog.alert.TextAlert;
 import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.NetworkConfigDialog;
 import de.uni_hannover.hci.battleships.ui.dialog.playerconfig.PlayerConfigDialog;
 import de.uni_hannover.hci.battleships.util.resource.R;
-import de.uni_hannover.hci.battleships.network.event.NetworkSocketUserNameReceivedEvent;
 
 // Java
 import java.io.IOException;
@@ -117,7 +114,6 @@ public class App extends Application
             chatView.addMessage(this.getUserPlayer(), event.getMessage());
         });
 
-
         // Zeige empfangene Chat-Nachrichten
         this.getNetworkSocket().getEventEmitter().addEventHandler(NetworkSocketMessageReceivedEvent.EVENT_TYPE, event ->
         {
@@ -150,7 +146,11 @@ public class App extends Application
                 enemyBoardView.setIsEnabled(true);
             }
         });
-        userBoardView.addEventHandler(BoardViewRightClickedEvent.EVENT_TYPE, event -> this.getUserPlayer().toggleShipOrientation());
+        userBoardView.addEventHandler(BoardViewRightClickedEvent.EVENT_TYPE, event ->
+        {
+            this.getUserPlayer().toggleShipOrientation();
+            this.getNetworkSocket().sendOrientationSwitch();
+        });
 
         enemyBoardView.addEventHandler(BoardViewCellClickedEvent.EVENT_TYPE, event ->
         {
@@ -165,14 +165,21 @@ public class App extends Application
                 return;
             }
 
-            if( !this.getEnemyPlayer().getBoard().shoot(event.getCoords().getX(), event.getCoords().getY()) )
+            if(!this.getEnemyPlayer().getBoard().shoot(event.getCoords()))
             {
                 this.getUserPlayer().setHasTurn(false);
                 this.getEnemyPlayer().setHasTurn(true);
             }
             this.getNetworkSocket().sendVector(event.getCoords());
-
             enemyBoardView.display(this.getEnemyPlayer().getBoard());
+
+            // Überprüfe, ob das Spiel vorbei ist
+            if(this.getEnemyPlayer().getBoard().areAllShipsHit())
+            {
+                new TextAlert("Sieg", "Du hast gegen " + this.getEnemyPlayer().getName() + " gewonnen!");
+                userBoardView.setIsEnabled(false);
+                enemyBoardView.setIsEnabled(false);
+            }
         });
 
         // Handle empfangene Board-Koordinaten
@@ -180,28 +187,34 @@ public class App extends Application
         {
             if(!this.getEnemyPlayer().isReady())
             {
-                this.getEnemyPlayer().getBoard().addShip(event.getCoords(), this.getEnemyPlayer().getFirstAvailableShip(), this.getEnemyPlayer().getShipOrientation()); // TODO: Transfer Ship-Orientation switch
+                this.getEnemyPlayer().getBoard().addShip(event.getCoords(), this.getEnemyPlayer().getFirstAvailableShip(), this.getEnemyPlayer().getShipOrientation());
                 this.getEnemyPlayer().removeFirstAvailableShip();
 
-                if (!this.getEnemyPlayer().hasAvailableShips()) this.getEnemyPlayer().setIsReady(true);
+                if(!this.getEnemyPlayer().hasAvailableShips()) this.getEnemyPlayer().setIsReady(true);
             }
             else
             {
-                if( !this.getUserPlayer().getBoard().shoot(event.getCoords().getX(), event.getCoords().getY()) )
+                if(!this.getUserPlayer().getBoard().shoot(event.getCoords()))
                 {
                     this.getUserPlayer().setHasTurn(true);
                     this.getEnemyPlayer().setHasTurn(false);
                 }
+                // Überprüfe, ob das Spiel vorbei ist
+                else if(this.getUserPlayer().getBoard().areAllShipsHit())
+                {
+                    // Spawn from FX-Thread
+                    Platform.runLater(() -> new TextAlert("Niederlage", "Du hast gegen " + this.getEnemyPlayer().getName() + " verloren!"));
+                    userBoardView.setIsEnabled(false);
+                    enemyBoardView.setIsEnabled(false);
+                }
                 userBoardView.display(this.getUserPlayer().getBoard());
             }
         });
+        this.getNetworkSocket().getEventEmitter().addEventHandler(NetworkSocketOrientationSwitchReceivedEvent.EVENT_TYPE, event -> this.getEnemyPlayer().toggleShipOrientation());
 
 
         // Schalte das Spielbrett frei, sobald ein User gejoint ist
-        this.getNetworkSocket().getEventEmitter().addEventHandler(NetworkSocketHandshakeReceivedEvent.EVENT_TYPE, event ->
-        {
-            userBoardView.setIsEnabled(true);
-        });
+        this.getNetworkSocket().getEventEmitter().addEventHandler(NetworkSocketHandshakeReceivedEvent.EVENT_TYPE, event -> userBoardView.setIsEnabled(true));
 
 
         if(this.getClient() != null) this.getClient().sendHandshake();
@@ -237,6 +250,7 @@ public class App extends Application
             {
                 new TextAlert("ERROR", "Ungültige Eingabe!");
                 this.showNetworkConfigDialog();
+                return;
             }
 
             switch(networkConfigResponse.getSocketType())
@@ -264,6 +278,7 @@ public class App extends Application
             {
                 new TextAlert("ERROR", "Ungültige Eingabe!");
                 this.showPlayerConfigDialog();
+                return;
             }
 
             this._user = new Player(playerConfigResponse.getName(), true);

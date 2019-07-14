@@ -3,10 +3,7 @@ package de.uni_hannover.hci.battleships.network.socket;
 // Internal dependencies
 import de.uni_hannover.hci.battleships.network.NetworkSocket;
 import de.uni_hannover.hci.battleships.network.NetworkSocketType;
-import de.uni_hannover.hci.battleships.network.event.NetworkSocketHandshakeReceivedEvent;
-import de.uni_hannover.hci.battleships.network.event.NetworkSocketMessageReceivedEvent;
-import de.uni_hannover.hci.battleships.network.event.NetworkSocketUserNameReceivedEvent;
-import de.uni_hannover.hci.battleships.network.event.NetworkSocketVectorReceivedEvent;
+import de.uni_hannover.hci.battleships.network.event.*;
 import de.uni_hannover.hci.battleships.util.Vector2i;
 
 // JavaFX
@@ -123,6 +120,14 @@ public class Client implements NetworkSocket
     /**
      * TODO
      */
+    public void sendOrientationSwitch()
+    {
+        this.sendString("os");
+    }
+
+    /**
+     * TODO
+     */
     private void runFetchLoop()
     {
         Thread thread = new Thread(() ->
@@ -139,6 +144,10 @@ public class Client implements NetworkSocket
                         {
                             this._isServerReady = true;
                             this.getEventEmitter().fireEvent(new NetworkSocketHandshakeReceivedEvent());
+                        }
+                        else if(fetchedString.equals("os"))
+                        {
+                            this.getEventEmitter().fireEvent(new NetworkSocketOrientationSwitchReceivedEvent());
                         }
                         else if(fetchedString.startsWith("m: "))
                         {

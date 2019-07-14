@@ -34,6 +34,11 @@ public interface NetworkSocket
 
     /**
      * TODO
+     */
+    public void sendOrientationSwitch();
+
+    /**
+     * TODO
      * @return
      */
     public Node getEventEmitter();

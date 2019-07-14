@@ -271,6 +271,7 @@ public class BoardView extends GridPane
     public void setIsEnabled(boolean newIsEnabled)
     {
         this._isEnabled = newIsEnabled;
+        if(this.getLastMouseTargetCell() != null) this.getLastMouseTargetCell().removeHighlighting();
     }
 
     /**

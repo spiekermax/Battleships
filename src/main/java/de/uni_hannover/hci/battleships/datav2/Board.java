@@ -37,11 +37,20 @@ public class Board
         return n >= 0 && n < BOARD_SIZE;
     }
 
+    public boolean areAllShipsHit()
+    {
+        for(int y = 0; y < BOARD_SIZE; ++y)
+            for(int x = 0; x < BOARD_SIZE; ++x)
+                if(this.getCell(y, x) == BoardCell.SHIP) return false;
+
+        return true;
+    }
+
     /**
      *
      * @param x
      * @param y
-     * @return Zugwiederholung?
+     * @return Zugwiederholung = true
      */
     public boolean shoot(int x, int y)
     {

@@ -9,7 +9,7 @@ public class NetworkSocketHandshakeReceivedEvent extends Event
 {
     /* CONSTANTS */
 
-    public static final EventType<NetworkSocketHandshakeReceivedEvent> EVENT_TYPE = new EventType<>("server-client-connected");
+    public static final EventType<NetworkSocketHandshakeReceivedEvent> EVENT_TYPE = new EventType<>("network-socket-handshake-received");
 
 
     /* LIFECYCLE */

@@ -4,6 +4,7 @@ package de.uni_hannover.hci.battleships.ui.dialog.networkconfig;
 import de.uni_hannover.hci.battleships.network.NetworkSocketType;
 import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.model.NetworkConfigDialogResponse;
 import de.uni_hannover.hci.battleships.ui.dialog.networkconfig.model.NetworkConfigDialogResponseType;
+import de.uni_hannover.hci.battleships.util.NetworkSocketConnectionValidator;
 import de.uni_hannover.hci.battleships.util.resource.R;
 
 // Java
@@ -53,39 +54,24 @@ public class NetworkConfigDialog extends Dialog<NetworkConfigDialogResponse>
 
             this.setResultConverter(buttonType ->
             {
-                if(buttonType == this.getHostButton())
+                if(buttonType == this.getCancelButton()) return new NetworkConfigDialogResponse(NetworkConfigDialogResponseType.ABORT, null, 0, null);
+
+                if(buttonType == this.getHostButton() && NetworkSocketConnectionValidator.validatePort(this.getPortTextFieldNum()))
+                {
                     return new NetworkConfigDialogResponse(NetworkConfigDialogResponseType.VALID, this.getIpAdressTextFieldText(), this.getPortTextFieldNum(), NetworkSocketType.SERVER);
-                else if(buttonType == this.getJoinButton())
+                }
+                else if(buttonType == this.getJoinButton() && NetworkSocketConnectionValidator.validateActiveServer(this.getPortTextFieldNum(), this.getIpAdressTextFieldText()))
+                {
                     return new NetworkConfigDialogResponse(NetworkConfigDialogResponseType.VALID, this.getIpAdressTextFieldText(), this.getPortTextFieldNum(), NetworkSocketType.CLIENT);
-                else
-                    return new NetworkConfigDialogResponse(NetworkConfigDialogResponseType.ABORT, null, 0, null);
+                }
+
+                return new NetworkConfigDialogResponse(NetworkConfigDialogResponseType.INVALID, null, 0, null);
             });
         }
         catch(IOException e)
         {
             throw new RuntimeException("ERROR: NetworkConfigDialog(): Failed to load main layout!", e);
         }
-    }
-
-
-    /* METHODS */
-
-    /**
-     * TODO
-     * @return
-     */
-    private boolean checkIpAdressInput()
-    {
-        return false;
-    }
-
-    /**
-     * TODO
-     * @return
-     */
-    private boolean checkPortInput()
-    {
-        return false;
     }
 
 
@@ -149,8 +135,15 @@ public class NetworkConfigDialog extends Dialog<NetworkConfigDialogResponse>
      * TODO
      * @return
      */
-    private int getPortTextFieldNum()
+    private Integer getPortTextFieldNum()
     {
-        return Integer.parseInt( this.getPortTextField().getText() );
+        try
+        {
+            return Integer.parseInt( this.getPortTextField().getText() );
+        }
+        catch(NumberFormatException e)
+        {
+            return null;
+        }
     }
 }

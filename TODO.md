@@ -6,7 +6,9 @@
 - [ ] Default port / ip
 - [ ] Default name, prevent name collisions
 - [ ] Confirm dialog with enter
-- [ ] Indikator: All ships placed, next size
 - [ ] Minianleitung
 - [ ] Erster Zug Problem
-- [ ] Shiporientation übertragen
+- [x] Shiporientation übertragen
+- [ ] play again
+- [ ] Constants Klasse
+- [ ] Socket connection checker to detect dead server
