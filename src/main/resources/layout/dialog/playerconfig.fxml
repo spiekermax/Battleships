@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.text.Text?>
+
+
+<VBox
+    xmlns="http://javafx.com/javafx"
+    xmlns:fx="http://javafx.com/fxml"
+
+    spacing="4">
+
+    <!-- Name -->
+    <Text>Name</Text>
+    <TextField
+        fx:id="_nameInputField"
+        promptText="Enter a name for your character" />
+
+</VBox>

@@ -1,11 +1,14 @@
 package de.uni_hannover.hci.battleships.ui.board;
 
 // Internal dependencies
-import de.uni_hannover.hci.battleships.util.resource.R;
+import de.uni_hannover.hci.battleships.datav2.Board;
 import de.uni_hannover.hci.battleships.ui.board.cell.BoardViewCell;
 import de.uni_hannover.hci.battleships.ui.board.cell.BoardViewCellColor;
 import de.uni_hannover.hci.battleships.ui.board.event.BoardViewCellClickedEvent;
+import de.uni_hannover.hci.battleships.ui.board.event.BoardViewCellHoveredEvent;
+import de.uni_hannover.hci.battleships.ui.board.event.BoardViewRightClickedEvent;
 import de.uni_hannover.hci.battleships.util.Vector2i;
+import de.uni_hannover.hci.battleships.util.resource.R;
 
 // Java
 import java.io.IOException;
@@ -13,6 +16,7 @@ import java.io.IOException;
 // JavaFX
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -27,6 +31,9 @@ public class BoardView extends GridPane
 
 
     /* ATTRIBUTES */
+
+    private boolean _isEnabled = true;
+    private boolean _shipsVisible = true;
 
     private BoardViewCell _lastMouseTargetCell;
 
@@ -105,6 +112,12 @@ public class BoardView extends GridPane
         Vector2i currentMouseTargetCoords = this.calcCellCoords(e.getX(), e.getY());
         BoardViewCell currentMouseTargetCell = this.getCell(currentMouseTargetCoords);
 
+        // Fire events
+        this.fireEvent(new BoardViewCellHoveredEvent(currentMouseTargetCoords));
+
+        // Disable hover-effect if BoardView is disabled
+        if(!this.isEnabled()) return;
+
         // If the targeted cell changed
         if(currentMouseTargetCell != this.getLastMouseTargetCell())
         {
@@ -127,12 +140,16 @@ public class BoardView extends GridPane
      */
     private void onMouseClick(MouseEvent e)
     {
-        // Fire 'board-view-cell-clicked' event, passing on the grid coordinates of the click.
-        Vector2i coords = this.calcCellCoords(e.getX(), e.getY());
-        this.fireEvent(new BoardViewCellClickedEvent(coords));
-
-        // Demo code only
-        this.getCell(coords).setDefaultColor(BoardViewCellColor.HIT);
+        if(e.getButton() == MouseButton.PRIMARY)
+        {
+            // Fire 'board-view-cell-clicked' event, passing on the grid coordinates of the click.
+            Vector2i coords = this.calcCellCoords(e.getX(), e.getY());
+            this.fireEvent(new BoardViewCellClickedEvent(coords));
+        }
+        else if(e.getButton() == MouseButton.SECONDARY)
+        {
+            this.fireEvent(new BoardViewRightClickedEvent());
+        }
     }
 
     /**
@@ -151,6 +168,41 @@ public class BoardView extends GridPane
 
 
     /* METHODS */
+
+    /**
+     * TODO
+     * @param board
+     */
+    public void display(Board board)
+    {
+        for(int y = 0; y < BOARD_SIZE; ++y)
+        {
+            for(int x = 0; x < BOARD_SIZE; ++x)
+            {
+                if(this.getCell(x, y) == null)
+                    throw new IndexOutOfBoundsException("ERROR: BoardView.display(): Board cell at " + new Vector2i(x ,y) + "does not exist!");
+
+                switch(board.getCell(x, y))
+                {
+                    case WATER:
+                        this.getCell(x, y).setDefaultColor(BoardViewCellColor.WATER);
+                        break;
+                    case SHIP:
+                        if(this.getShipsVisible())
+                            this.getCell(x, y).setDefaultColor(BoardViewCellColor.SHIP);
+                        else
+                            this.getCell(x, y).setDefaultColor(BoardViewCellColor.WATER);
+                        break;
+                    case HIT:
+                        this.getCell(x, y).setDefaultColor(BoardViewCellColor.HIT);
+                        break;
+                    case MISS:
+                        this.getCell(x, y).setDefaultColor(BoardViewCellColor.MISS);
+                        break;
+                }
+            }
+        }
+    }
 
     /**
      * TODO
@@ -201,6 +253,43 @@ public class BoardView extends GridPane
     private BoardViewCell getCell(Vector2i coords)
     {
         return this.getCell(coords.getX(), coords.getY());
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    public boolean isEnabled()
+    {
+        return this._isEnabled;
+    }
+
+    /**
+     * TODO
+     * @param newIsEnabled
+     */
+    public void setIsEnabled(boolean newIsEnabled)
+    {
+        this._isEnabled = newIsEnabled;
+        if(this.getLastMouseTargetCell() != null) this.getLastMouseTargetCell().removeHighlighting();
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    public boolean getShipsVisible()
+    {
+        return this._shipsVisible;
+    }
+
+    /**
+     * TODO
+     * @param newShipsVisible
+     */
+    public void setShipsVisible(boolean newShipsVisible)
+    {
+        this._shipsVisible = newShipsVisible;
     }
 
     /**

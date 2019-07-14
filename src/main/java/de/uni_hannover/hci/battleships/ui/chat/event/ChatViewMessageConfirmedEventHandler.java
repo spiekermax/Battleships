@@ -4,4 +4,4 @@ package de.uni_hannover.hci.battleships.ui.chat.event;
 import javafx.event.EventHandler;
 
 
-public interface ChatViewMessageConfirmedEventHandler extends EventHandler<ChatViewMessageConfirmedEvent> { }
+public interface ChatViewMessageConfirmedEventHandler extends EventHandler<ChatViewMessageConfirmedEvent> {}

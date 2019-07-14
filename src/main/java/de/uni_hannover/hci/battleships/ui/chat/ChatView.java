@@ -1,6 +1,7 @@
 package de.uni_hannover.hci.battleships.ui.chat;
 
 // Internal dependencies
+import de.uni_hannover.hci.battleships.datav2.Player;
 import de.uni_hannover.hci.battleships.util.resource.R;
 import de.uni_hannover.hci.battleships.ui.chat.event.ChatViewMessageConfirmedEvent;
 
@@ -10,6 +11,7 @@ import java.io.IOException;
 // JavaFX
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
@@ -18,6 +20,12 @@ import javafx.scene.layout.VBox;
 public class ChatView extends VBox
 {
     /* COMPONENTS */
+
+    /**
+     * TODO
+     */
+    @FXML
+    private TextArea _messageView;
 
     /**
      * Das Eingabefeld des Chats.
@@ -68,8 +76,35 @@ public class ChatView extends VBox
     }
 
 
+    /* METHODS */
+
+    /**
+     * TODO
+     * @param source
+     * @param message
+     */
+    public void addMessage(Player source, String message)
+    {
+        this.getMessageView().setText(this.getMessageView().getText() + source.getName() + ": " + message + "\n");
+        this.getMessageView().setScrollTop(Double.MAX_VALUE);
+    }
+
+
     /* GETTERS & SETTERS */
 
+    /**
+     * TODO
+     * @return
+     */
+    private TextArea getMessageView()
+    {
+        return this._messageView;
+    }
+
+    /**
+     * TODO
+     * @return
+     */
     private TextField getInputField()
     {
         return this._inputField;

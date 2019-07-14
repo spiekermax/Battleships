@@ -1,5 +1,10 @@
 package de.uni_hannover.hci.battleships.util;
 
+// Java
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 public class Vector2i
 {
@@ -71,6 +76,30 @@ public class Vector2i
 
 
     /* MISCELLANEOUS */
+
+    /**
+     * TODO
+     * @param string
+     * @return
+     */
+    public static Vector2i fromString(String string)
+    {
+        Pattern pattern = Pattern.compile("-?\\d+");
+        Matcher matcher = pattern.matcher(string);
+
+        Integer x = null, y = null;
+        int matchCount = 0;
+        while(matcher.find())
+        {
+            if(matchCount == 0) x = Integer.parseInt(matcher.group());
+            else if(matchCount == 1) y = Integer.parseInt(matcher.group());
+            else throw new IllegalArgumentException("ERROR: Vector2i.fromString(): Illegal encoding!");
+
+            ++matchCount;
+        }
+
+        return new Vector2i( Objects.requireNonNull(x), Objects.requireNonNull(y) );
+    }
 
     /**
      * TODO
