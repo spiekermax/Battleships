@@ -25,7 +25,7 @@ public class Ship {
         int x; int y;
         for(int i = 0; i < cor.length; i++) {
             x = cor[i].getX(); y = cor[i].getY();
-            this.myBoard.board[x][y] = FieldMode.SHIP;
+            b.board[x][y] = FieldMode.SHIP;
         }
     }
     public int getLength() {

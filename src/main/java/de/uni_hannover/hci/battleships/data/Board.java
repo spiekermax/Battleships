@@ -48,7 +48,7 @@ public class Board {
         Vector2i[] arr = new Vector2i[length];
         arr[0] = cor;
 
-        if(or == Orientation.DOWN) {    //Wenn Schiff runter geht
+        if(or == Orientation.VERTICAL) {    //Wenn Schiff runter geht
             if(outOfBounds(x, y+length)) {  //Prüft, ob es über die Grenzen hinausgeht
                 return null;
             }
@@ -57,6 +57,11 @@ public class Board {
             }
             int[] dir = getDirection(arr);
             if(hasNoNeighbours(arr, dir)) { //Prüft, dass keine NachbarSchiffe vorhanden sind
+
+                for(int i = 0; i < length; i++) {
+                    setShip(x,y+i);
+                }
+
                 return new Ship(arr, this);
             } else {
                 return null;
@@ -70,6 +75,11 @@ public class Board {
             }
             int[] dir = getDirection(arr);
             if(hasNoNeighbours(arr, dir)) { //Prüft, dass keine NachbarSchiffe vorhanden sind
+
+                for(int i = 0; i < length; i++) {
+                    setShip(x+i,y);
+                }
+
                 return new Ship(arr, this);
             } else {
                 return null;
