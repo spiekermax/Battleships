@@ -4,9 +4,11 @@ package de.uni_hannover.hci.battleships.network.socket;
 import de.uni_hannover.hci.battleships.network.NetworkSocket;
 import de.uni_hannover.hci.battleships.network.NetworkSocketType;
 import de.uni_hannover.hci.battleships.network.event.*;
+import de.uni_hannover.hci.battleships.ui.dialog.alert.TextAlert;
 import de.uni_hannover.hci.battleships.util.Vector2i;
 
 // JavaFX
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 
@@ -78,12 +80,17 @@ public class Server implements NetworkSocket
     {
         try
         {
+            if(!this.isClientReady())
+            {
+                new TextAlert("Info", "Bitte warte, bis sich dein Gegner verbindet!");
+                return;
+            }
+
             this.getOutputStreamWriter().write(string + "\n");
             this.getOutputStreamWriter().flush();
         }
         catch(IOException e)
         {
-            // TODO: Besseres ERROR-Handling
             e.printStackTrace();
         }
     }

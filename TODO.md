@@ -1,6 +1,6 @@
 ### TODO
 
-- [ ] Auf gültige Eingaben überprüfen
+- [x] Auf gültige Eingaben überprüfen
 - [ ] Server/Client Dialog mit Dropdown ersetzen
 - [ ] Ghostship
 - [ ] Default port / ip
