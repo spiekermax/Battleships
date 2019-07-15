@@ -15,14 +15,15 @@ public class Player
     private boolean _hasTurn;
 
     private final Board _board = new Board();
-    private final ArrayList<Integer> _availableShips = new ArrayList<>( Arrays.asList(5, 4, 4, 3, 3, 3, 2, 2, 2, 2) );
     private ShipOrientation _shipOrientation = ShipOrientation.VERTICAL;
+
+    // Eine Liste, die speichert wie viele und welche Länge die Schiffe des Speilers haben müssen
+    private final ArrayList<Integer> _availableShips = new ArrayList<>( Arrays.asList(5, 4, 4, 3, 3, 3, 2, 2, 2, 2) );
 
 
     /* LIFECYCLE */
 
-    public Player(String name, boolean hasTurn)
-    {
+    public Player(String name, boolean hasTurn) {
         this._name = name;
         this.setHasTurn(hasTurn);
     }
@@ -35,10 +36,11 @@ public class Player
         return this.getAvailableShips().remove(0);
     }
 
-    public void toggleShipOrientation()
-    {
-        switch(this.getShipOrientation())
-        {
+    /**
+     * Diese Funktion ändert die Ausrichtung des zunächst zu setzenden Schiffes (vertical und horizontal)
+     */
+    public void toggleShipOrientation() {
+        switch(this.getShipOrientation()) {
             case VERTICAL:
                 this.setShipOrientation(ShipOrientation.HORIZONTAL);
                 break;
