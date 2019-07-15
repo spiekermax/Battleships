@@ -40,7 +40,7 @@ public class Server implements NetworkSocket
     /* LIFECYCLE */
 
     /**
-     * TODO
+     * Der Server wird mit einem Port erstellt
      * @param port
      */
     public Server(int port)
@@ -65,7 +65,7 @@ public class Server implements NetworkSocket
     /* METHODS */
 
     /**
-     * TODO
+     * Handshake Bestätigung wird an die Clients gesendet
      */
     public void sendHandshake()
     {
@@ -96,7 +96,7 @@ public class Server implements NetworkSocket
     }
 
     /**
-     * TODO
+     * Eine Nachricht wird als String an den Server versendet
      * @param message
      */
     public void sendMessage(String message)
@@ -105,7 +105,7 @@ public class Server implements NetworkSocket
     }
 
     /**
-     * TODO
+     * Die Vektorkoordinaten werden an den Server geschickt
      * @param vector
      */
     public void sendVector(Vector2i vector)
@@ -114,7 +114,7 @@ public class Server implements NetworkSocket
     }
 
     /**
-     * TODO
+     * Der Nutzername des Spielers wird an den Server versendet
      * @param userName
      */
     public void sendUserName(String userName)
@@ -123,7 +123,7 @@ public class Server implements NetworkSocket
     }
 
     /**
-     * TODO
+     * Sendet die Orientierung der Schiffe an den Client
      */
     public void sendOrientationSwitch()
     {
