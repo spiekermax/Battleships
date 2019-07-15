@@ -228,7 +228,7 @@ public class App extends Application
     /**
      * TODO
      */
-    private void terminate()
+    public static void terminate()
     {
         Platform.exit();
         System.exit(0);
@@ -245,7 +245,7 @@ public class App extends Application
         NetworkConfigDialog networkConfigDialog = new NetworkConfigDialog();
         networkConfigDialog.showAndWait().ifPresent(networkConfigResponse ->
         {
-            if(networkConfigResponse.isAborted()) this.terminate();
+            if(networkConfigResponse.isAborted()) App.terminate();
             if(!networkConfigResponse.isValid())
             {
                 new TextAlert("ERROR", "Ungültige Eingabe!");
@@ -273,7 +273,7 @@ public class App extends Application
         PlayerConfigDialog playerConfigDialog = new PlayerConfigDialog();
         playerConfigDialog.showAndWait().ifPresent(playerConfigResponse ->
         {
-            if(playerConfigResponse.isAborted()) this.terminate();
+            if(playerConfigResponse.isAborted()) App.terminate();
             if(!playerConfigResponse.isValid())
             {
                 new TextAlert("ERROR", "Ungültige Eingabe!");
