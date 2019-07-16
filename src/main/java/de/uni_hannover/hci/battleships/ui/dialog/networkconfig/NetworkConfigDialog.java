@@ -23,8 +23,8 @@ public class NetworkConfigDialog extends Dialog<NetworkConfigDialogResponse>
 {
     /* COMPONENTS */
 
-    private final ButtonType _hostButton = new ButtonType("Host");
-    private final ButtonType _joinButton = new ButtonType("Join");
+    private final ButtonType _hostButton = new ButtonType("Host", ButtonBar.ButtonData.YES);
+    private final ButtonType _joinButton = new ButtonType("Join", ButtonBar.ButtonData.YES);
     private final ButtonType _cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
     private final TextField _ipAdressTextField;

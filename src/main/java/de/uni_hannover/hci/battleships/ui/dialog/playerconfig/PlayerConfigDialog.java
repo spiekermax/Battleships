@@ -21,7 +21,7 @@ public class PlayerConfigDialog extends Dialog<PlayerConfigDialogResponse>
 {
     /* COMPONENTS */
 
-    private final ButtonType _confirmButton = new ButtonType("OK");
+    private final ButtonType _confirmButton = new ButtonType("OK", ButtonBar.ButtonData.YES);
     private final ButtonType _cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
     private final TextField _nameInputField;
