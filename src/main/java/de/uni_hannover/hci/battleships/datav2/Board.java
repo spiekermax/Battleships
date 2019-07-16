@@ -46,6 +46,14 @@ public class Board
         return n >= 0 && n < BOARD_SIZE;
     }
 
+    public static boolean isInBounds(int x, int y) {
+        return Board.isInBounds(x) && Board.isInBounds(y);
+    }
+
+    public static boolean isInBounds(Vector2i coords) {
+        return Board.isInBounds(coords.getX(), coords.getY());
+    }
+
     public boolean areAllShipsHit() {
         for(int y = 0; y < BOARD_SIZE; ++y) {
             for (int x = 0; x < BOARD_SIZE; ++x) {

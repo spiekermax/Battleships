@@ -128,8 +128,8 @@ public class App extends Application
         // Handle Board-Mausinteraktionen
         userBoardView.addEventHandler(BoardViewCellHoveredEvent.EVENT_TYPE, event ->
         {
-            if(this.getUserPlayer().isReady()) return;
-            if(!Board.isInBounds(event.getX())) return;
+            if(!userBoardView.isEnabled() || this.getUserPlayer().isReady()) return;
+            if(!Board.isInBounds(event.getCoords())) return;
 
             Board ghostBoard = new Board(this.getUserPlayer().getBoard());
             if( ghostBoard.addShip(event.getCoords(), BoardCell.GHOST_SHIP, this.getUserPlayer().getFirstAvailableShip(), this.getUserPlayer().getShipOrientation()) )
@@ -145,7 +145,7 @@ public class App extends Application
 
         userBoardView.addEventHandler(BoardViewCellClickedEvent.EVENT_TYPE, event ->
         {
-            if(this.getServer() != null && !this.getServer().isClientReady())
+            if(!userBoardView.isEnabled())
             {
                 new TextAlert("Info", "Bitte warte, bis sich dein Gegner verbindet!");
                 return;
