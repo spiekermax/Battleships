@@ -21,7 +21,15 @@ public class Board
     public Board() {
         for(int y = 0; y < BOARD_SIZE; ++y) {
             for(int x = 0; x < BOARD_SIZE; ++x) {
-                this.setCell(y, x, BoardCell.WATER);
+                this.setCell(x, y, BoardCell.WATER);
+            }
+        }
+    }
+
+    public Board(Board other) {
+        for(int y = 0; y < BOARD_SIZE; ++y) {
+            for(int x = 0; x < BOARD_SIZE; ++x) {
+                this.setCell(x, y, other.getCell(x, y));
             }
         }
     }
