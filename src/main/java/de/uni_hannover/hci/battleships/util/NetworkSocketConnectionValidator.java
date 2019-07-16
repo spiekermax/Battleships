@@ -47,6 +47,7 @@ public class NetworkSocketConnectionValidator
     public static boolean validatePort(Integer port)
     {
         if(port == null) return false;
+        if(port.toString().length() != 4) return false;
 
         try
         {

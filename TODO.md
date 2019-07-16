@@ -5,7 +5,7 @@
 - [ ] Ghostship
 - [ ] Default port / ip
 - [ ] Default name, prevent name collisions
-- [ ] Confirm dialog with enter
+- [x] Confirm dialog with enter
 - [ ] Minianleitung
 - [ ] Erster Zug Problem
 - [x] Shiporientation übertragen
