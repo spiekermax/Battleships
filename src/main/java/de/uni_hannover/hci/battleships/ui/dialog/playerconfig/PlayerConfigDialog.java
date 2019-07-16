@@ -9,6 +9,7 @@ import de.uni_hannover.hci.battleships.util.resource.R;
 import java.io.IOException;
 
 // JavaFX
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonBar;
@@ -43,6 +44,8 @@ public class PlayerConfigDialog extends Dialog<PlayerConfigDialogResponse>
             this.getDialogPane().getButtonTypes().setAll(this.getConfirmButton(), this.getCancelButton());
 
             this._nameInputField = (TextField) dialogContent.lookup( R.id("_nameInputField") );
+            Platform.runLater(() -> this.getNameInputField().requestFocus());
+
 
             this.setResultConverter(buttonType ->
             {

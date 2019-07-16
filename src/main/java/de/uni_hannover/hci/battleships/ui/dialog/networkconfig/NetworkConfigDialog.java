@@ -11,6 +11,7 @@ import de.uni_hannover.hci.battleships.util.resource.R;
 import java.io.IOException;
 
 // JavaFX
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.ButtonBar;
@@ -51,6 +52,7 @@ public class NetworkConfigDialog extends Dialog<NetworkConfigDialogResponse>
 
             this._ipAdressTextField = (TextField) dialogContent.lookup( R.id("_ipAdressInputField") );
             this._portTextField = (TextField) dialogContent.lookup( R.id("_portInputField") );
+            Platform.runLater(() -> this.getIpAdressTextField().requestFocus());
 
             this.setResultConverter(buttonType ->
             {
@@ -73,7 +75,6 @@ public class NetworkConfigDialog extends Dialog<NetworkConfigDialogResponse>
             throw new RuntimeException("ERROR: NetworkConfigDialog(): Failed to load main layout!", e);
         }
     }
-
 
     /* GETTERS & SETTERS */
 
