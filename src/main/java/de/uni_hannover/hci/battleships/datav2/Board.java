@@ -79,11 +79,12 @@ public class Board
      * Diese Funktion prüft, ob die Koordinaten des potenziellen Schiffes gültig sind
      * @param x Die x-Koordinate, auf der das Schiff beginnt
      * @param y Die y-Koordinate, auf der das Schiff beginnt
+     * @param shipCellType Die Art von Feldern, aus denen das Schiff bestehen soll
      * @param length Die Länge des Schiffes
      * @param orientation Die Orientierung des Schiffes, welche nur vertical oder horizontal sein kann
      * @return Gibt true zurück, falls das Schiff so gesetzt werden kann
      */
-    public boolean addShip(int x, int y, int length, ShipOrientation orientation) {
+    public boolean addShip(int x, int y, BoardCell shipCellType, int length, ShipOrientation orientation) {
         for(int i = 0; i < length; ++i) {
             switch(orientation) {
 
@@ -122,20 +123,19 @@ public class Board
         for(int i = 0; i < length; ++i) {   //Ab hier wird das Schiff erstellt, da die Koordinaten gültig sind
             switch(orientation) {
                 case HORIZONTAL:
-                    this.setCell(x + i, y, BoardCell.SHIP);
+                    this.setCell(x + i, y, shipCellType);
                     break;
                 case VERTICAL:
-                    this.setCell(x, y + i, BoardCell.SHIP);
+                    this.setCell(x, y + i, shipCellType);
                     break;
             }
         }
         return true;
     }
 
-    public boolean addShip(Vector2i coords, int length, ShipOrientation orientation) {
-        return this.addShip(coords.getX(), coords.getY(), length, orientation);
+    public boolean addShip(Vector2i coords, BoardCell shipCellType, int length, ShipOrientation orientation) {
+        return this.addShip(coords.getX(), coords.getY(), shipCellType, length, orientation);
     }
-
 
     /* GETTERS & SETTERS */
 
