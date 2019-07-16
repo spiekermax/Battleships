@@ -69,20 +69,29 @@ public class Server implements NetworkSocket
      */
     public void sendHandshake()
     {
-        this.sendString("handshake");
+        this.sendString("handshake", true);
+    }
+
+    /**
+     * TODO
+     * @param string
+     */
+    private void sendString(String string)
+    {
+        this.sendString(string, false);
     }
 
     /**
      * Methode zum Versenden von Nachrichten
      * @param string
      */
-    private void sendString(String string)
+    private void sendString(String string, boolean force)
     {
         try
         {
-            if(!this.isClientReady())
+            if(!force && !this.isClientReady())
             {
-                new TextAlert("Info", "Bitte warte, bis sich dein Gegner verbindet!");
+                Platform.runLater(() -> new TextAlert("Info", "Bitte warte, bis sich dein Gegner verbindet!"));
                 return;
             }
 

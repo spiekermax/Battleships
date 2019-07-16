@@ -2,12 +2,12 @@
 
 - [x] Auf gültige Eingaben überprüfen
 - [ ] Server/Client Dialog mit Dropdown ersetzen
-- [ ] Ghostship
+- [x] Ghostship
 - [ ] Default port / ip
 - [ ] Default name, prevent name collisions
 - [x] Confirm dialog with enter
 - [ ] Minianleitung
-- [ ] Erster Zug Problem
+- [ ] ! Erster Zug Problem
 - [x] Shiporientation übertragen
 - [ ] play again
 - [ ] Constants Klasse

@@ -1,6 +1,8 @@
 package de.uni_hannover.hci.battleships;
 
 // Internal dependencies
+import de.uni_hannover.hci.battleships.datav2.Board;
+import de.uni_hannover.hci.battleships.datav2.BoardCell;
 import de.uni_hannover.hci.battleships.datav2.Player;
 import de.uni_hannover.hci.battleships.network.NetworkSocket;
 import de.uni_hannover.hci.battleships.network.event.*;
@@ -8,6 +10,8 @@ import de.uni_hannover.hci.battleships.network.socket.Client;
 import de.uni_hannover.hci.battleships.network.socket.Server;
 import de.uni_hannover.hci.battleships.ui.board.BoardView;
 import de.uni_hannover.hci.battleships.ui.board.event.BoardViewCellClickedEvent;
+import de.uni_hannover.hci.battleships.ui.board.event.BoardViewCellHoveredEvent;
+import de.uni_hannover.hci.battleships.ui.board.event.BoardViewMouseExitedEvent;
 import de.uni_hannover.hci.battleships.ui.board.event.BoardViewRightClickedEvent;
 import de.uni_hannover.hci.battleships.ui.chat.ChatView;
 import de.uni_hannover.hci.battleships.ui.chat.event.ChatViewMessageConfirmedEvent;
@@ -121,7 +125,24 @@ public class App extends Application
         });
 
 
-        // Handle Board-Clicks
+        // Handle Board-Mausinteraktionen
+        userBoardView.addEventHandler(BoardViewCellHoveredEvent.EVENT_TYPE, event ->
+        {
+            if(this.getUserPlayer().isReady()) return;
+            if(!Board.isInBounds(event.getX())) return;
+
+            Board ghostBoard = new Board(this.getUserPlayer().getBoard());
+            if( ghostBoard.addShip(event.getCoords(), BoardCell.GHOST_SHIP, this.getUserPlayer().getFirstAvailableShip(), this.getUserPlayer().getShipOrientation()) )
+            {
+                userBoardView.display(ghostBoard);
+            }
+            else
+            {
+                userBoardView.display(this.getUserPlayer().getBoard());
+            }
+        });
+        userBoardView.addEventHandler(BoardViewMouseExitedEvent.EVENT_TYPE, event -> userBoardView.display(this.getUserPlayer().getBoard()));
+
         userBoardView.addEventHandler(BoardViewCellClickedEvent.EVENT_TYPE, event ->
         {
             if(this.getServer() != null && !this.getServer().isClientReady())
@@ -150,6 +171,9 @@ public class App extends Application
         {
             this.getUserPlayer().toggleShipOrientation();
             this.getNetworkSocket().sendOrientationSwitch();
+
+            // Update Ghostship
+            userBoardView.fireEvent(new BoardViewCellHoveredEvent(event.getCoords()));
         });
 
         enemyBoardView.addEventHandler(BoardViewCellClickedEvent.EVENT_TYPE, event ->

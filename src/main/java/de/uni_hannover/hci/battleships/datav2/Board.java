@@ -42,8 +42,7 @@ public class Board
      * @param n Der Integer, der überprüft wird
      * @return Ein boolean. True, falls der Parameter innerhalb liegt.
      */
-    public boolean isInBounds(int n)
-    {
+    public static boolean isInBounds(int n) {
         return n >= 0 && n < BOARD_SIZE;
     }
 
@@ -97,14 +96,14 @@ public class Board
             switch(orientation) {
 
                 case HORIZONTAL:
-                    if (!this.isInBounds(x + i)) { return false; }  //Falls eine der Koordinate außerhalb liegt
+                    if (!Board.isInBounds(x + i)) { return false; }  //Falls eine der Koordinate außerhalb liegt
                     if (this.getCell(x + i, y) != BoardCell.WATER) { return false; } //Falls das Feld bereits belegt ist
 
                     for (int a = (i == 0) ? -1 : 0; a <= 1; ++a) {  //Wenn die erste Koordinate betrachtet wird, muss zurückbetrachtet werden, x-Richtung
                         for (int b = -1; b <= 1; ++b) { //y-Richtung betrachten
                             if (a == 0 && b == 0) { continue; }
 
-                            if (this.isInBounds(x + i + a) && this.isInBounds(y + b) && this.getCell(x + i + a, y + b) != BoardCell.WATER) {
+                            if (Board.isInBounds(x + i + a) && Board.isInBounds(y + b) && this.getCell(x + i + a, y + b) != BoardCell.WATER) {
                                 return false;   //Falls diese betrachtete Zelle um die Koordinate herum nicht frei ist
                             }
                         }
@@ -112,14 +111,14 @@ public class Board
                     break;
 
                 case VERTICAL:
-                    if (!this.isInBounds(y + i)) { return false; } //Falls eine der Koordinate außerhalb liegt
+                    if (!Board.isInBounds(y + i)) { return false; } //Falls eine der Koordinate außerhalb liegt
                     if (this.getCell(x, y + i) != BoardCell.WATER) { return false; } //Falls das Feld bereits belegt ist
 
                     for (int a = (i == 0) ? -1 : 0; a <= 1; ++a) { //Wenn die erste Koordinate betrachtet wird, muss zurückbetrachtet werden, y-Richtung
                         for (int b = -1; b <= 1; ++b) { //x-Richtung betrachten
                             if (a == 0 && b == 0) { continue; }
 
-                            if (this.isInBounds(x + b) && this.isInBounds(y + i + a) && this.getCell(x + b, y + i + a) != BoardCell.WATER) {
+                            if (Board.isInBounds(x + b) && Board.isInBounds(y + i + a) && this.getCell(x + b, y + i + a) != BoardCell.WATER) {
                                 return false; //Falls diese betrachtete Zelle um die Koordinate herum nicht frei ist
                             }
                         }
@@ -143,6 +142,14 @@ public class Board
 
     public boolean addShip(Vector2i coords, BoardCell shipCellType, int length, ShipOrientation orientation) {
         return this.addShip(coords.getX(), coords.getY(), shipCellType, length, orientation);
+    }
+
+    public boolean addShip(int x, int y, int length, ShipOrientation orientation) {
+        return this.addShip(x, y, BoardCell.SHIP, length, orientation);
+    }
+
+    public boolean addShip(Vector2i coords, int length, ShipOrientation orientation) {
+        return this.addShip(coords, BoardCell.SHIP, length, orientation);
     }
 
     /* GETTERS & SETTERS */

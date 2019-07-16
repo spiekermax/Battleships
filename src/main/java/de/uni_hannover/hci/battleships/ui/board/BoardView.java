@@ -6,6 +6,7 @@ import de.uni_hannover.hci.battleships.ui.board.cell.BoardViewCell;
 import de.uni_hannover.hci.battleships.ui.board.cell.BoardViewCellColor;
 import de.uni_hannover.hci.battleships.ui.board.event.BoardViewCellClickedEvent;
 import de.uni_hannover.hci.battleships.ui.board.event.BoardViewCellHoveredEvent;
+import de.uni_hannover.hci.battleships.ui.board.event.BoardViewMouseExitedEvent;
 import de.uni_hannover.hci.battleships.ui.board.event.BoardViewRightClickedEvent;
 import de.uni_hannover.hci.battleships.util.Vector2i;
 import de.uni_hannover.hci.battleships.util.resource.R;
@@ -140,15 +141,15 @@ public class BoardView extends GridPane
      */
     private void onMouseClick(MouseEvent e)
     {
+        Vector2i coords = this.calcCellCoords(e.getX(), e.getY());
         if(e.getButton() == MouseButton.PRIMARY)
         {
             // Fire 'board-view-cell-clicked' event, passing on the grid coordinates of the click.
-            Vector2i coords = this.calcCellCoords(e.getX(), e.getY());
             this.fireEvent(new BoardViewCellClickedEvent(coords));
         }
         else if(e.getButton() == MouseButton.SECONDARY)
         {
-            this.fireEvent(new BoardViewRightClickedEvent());
+            this.fireEvent(new BoardViewRightClickedEvent(coords));
         }
     }
 
@@ -158,6 +159,9 @@ public class BoardView extends GridPane
      */
     private void onMouseExited(MouseEvent e)
     {
+        // Fire events
+        this.fireEvent(new BoardViewMouseExitedEvent());
+
         // Remove all highlighting, once the mouse leaves this component
         if(this.getLastMouseTargetCell() != null)
             this.getLastMouseTargetCell().removeHighlighting();
@@ -198,6 +202,9 @@ public class BoardView extends GridPane
                         break;
                     case MISS:
                         this.getCell(x, y).setDefaultColor(BoardViewCellColor.MISS);
+                        break;
+                    case GHOST_SHIP:
+                        this.getCell(x, y).setDefaultColor(BoardViewCellColor.GHOST_SHIP);
                         break;
                 }
             }
