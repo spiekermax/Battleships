@@ -1,7 +1,7 @@
 package de.uni_hannover.hci.battleships.ui.chat;
 
 // Internal dependencies
-import de.uni_hannover.hci.battleships.datav2.Player;
+import de.uni_hannover.hci.battleships.data.Player;
 import de.uni_hannover.hci.battleships.util.resource.R;
 import de.uni_hannover.hci.battleships.ui.chat.event.ChatViewMessageConfirmedEvent;
 

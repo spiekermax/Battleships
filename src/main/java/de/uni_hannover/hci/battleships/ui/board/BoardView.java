@@ -1,7 +1,7 @@
 package de.uni_hannover.hci.battleships.ui.board;
 
 // Internal dependencies
-import de.uni_hannover.hci.battleships.datav2.Board;
+import de.uni_hannover.hci.battleships.data.Board;
 import de.uni_hannover.hci.battleships.ui.board.cell.BoardViewCell;
 import de.uni_hannover.hci.battleships.ui.board.cell.BoardViewCellColor;
 import de.uni_hannover.hci.battleships.ui.board.event.BoardViewCellClickedEvent;
