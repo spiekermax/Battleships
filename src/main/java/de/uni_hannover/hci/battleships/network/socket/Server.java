@@ -49,8 +49,8 @@ public class Server implements NetworkSocket
 
         try
         {
-            this._serverSocket = new ServerSocket(this.getPort(), 1, this.getIpAdress());
-            System.out.println(this.getIpAdress());
+            this._serverSocket = new ServerSocket(this.getPort(), 1, this.getIpAddress());
+            System.out.println(this.getIpAddress());
 
             this.setIsRunning(true);
             this.acceptConnections();
@@ -269,7 +269,7 @@ public class Server implements NetworkSocket
      * @return
      * @throws UnknownHostException
      */
-    public InetAddress getIpAdress() throws UnknownHostException
+    public InetAddress getIpAddress() throws UnknownHostException
     {
         return InetAddress.getLocalHost();
     }
