@@ -269,7 +269,7 @@ public class Server implements NetworkSocket
      * @return
      * @throws UnknownHostException
      */
-    public InetAddress getIpAddress() throws UnknownHostException
+    public InetAddress getIpAdress() throws UnknownHostException
     {
         return InetAddress.getLocalHost();
     }
