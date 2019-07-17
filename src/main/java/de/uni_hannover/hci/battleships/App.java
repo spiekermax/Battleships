@@ -1,9 +1,9 @@
 package de.uni_hannover.hci.battleships;
 
 // Internal dependencies
-import de.uni_hannover.hci.battleships.datav2.Board;
-import de.uni_hannover.hci.battleships.datav2.BoardCell;
-import de.uni_hannover.hci.battleships.datav2.Player;
+import de.uni_hannover.hci.battleships.data.Board;
+import de.uni_hannover.hci.battleships.data.BoardCell;
+import de.uni_hannover.hci.battleships.data.Player;
 import de.uni_hannover.hci.battleships.network.NetworkSocket;
 import de.uni_hannover.hci.battleships.network.event.*;
 import de.uni_hannover.hci.battleships.network.socket.Client;

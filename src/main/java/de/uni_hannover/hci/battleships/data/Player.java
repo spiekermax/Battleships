@@ -1,16 +1,13 @@
-package de.uni_hannover.hci.battleships.datav2;
+package de.uni_hannover.hci.battleships.data;
 
 // Java
 import java.util.ArrayList;
 import java.util.Arrays;
 
 
-public class Player
-{
-    /* ATTRIBUTES */
+public class Player {
 
     private final String _name;
-
     private boolean _isReady = false;
     private boolean _hasTurn;
 
@@ -20,16 +17,10 @@ public class Player
     // Eine Liste, die speichert wie viele und welche Länge die Schiffe des Speilers haben müssen
     private final ArrayList<Integer> _availableShips = new ArrayList<>( Arrays.asList(5, 4, 4, 3, 3, 3, 2, 2, 2, 2) );
 
-
-    /* LIFECYCLE */
-
     public Player(String name, boolean hasTurn) {
         this._name = name;
         this.setHasTurn(hasTurn);
     }
-
-
-    /* METHODS */
 
     public Integer removeFirstAvailableShip()
     {
@@ -49,9 +40,6 @@ public class Player
                 break;
         }
     }
-
-
-    /* GETTERS & SETTERS */
 
     public String getName()
     {

@@ -1,22 +1,13 @@
-package de.uni_hannover.hci.battleships.datav2;
+package de.uni_hannover.hci.battleships.data;
 
 // Internal dependencies
 import de.uni_hannover.hci.battleships.util.Vector2i;
 
 
-public class Board
-{
-    /* CONSTANTS */
+public class Board {
 
     public static final int BOARD_SIZE = 10;
-
-
-    /* ATTRIBUTES */
-
     private final BoardCell[][] _cells = new BoardCell[BOARD_SIZE][BOARD_SIZE];
-
-
-    /* LIFECYCLE */
 
     public Board() {
         for(int y = 0; y < BOARD_SIZE; ++y) {
@@ -33,9 +24,6 @@ public class Board
             }
         }
     }
-
-
-    /* METHODS */
 
     /**
      * Diese Methode prüft, ob der Parameter noch innerhalb der Grenzen des Boards liegt.
@@ -159,8 +147,6 @@ public class Board
     public boolean addShip(Vector2i coords, int length, ShipOrientation orientation) {
         return this.addShip(coords, BoardCell.SHIP, length, orientation);
     }
-
-    /* GETTERS & SETTERS */
 
     public BoardCell getCell(int x, int y) {
         return this._cells[x][y];
