@@ -53,6 +53,46 @@ public class Board {
         return true;
     }
 
+    public int[] getDirection(int x, int y) {
+        int dx = x; int dy = y;
+
+        for(int i = -1; i <= 1; i++) {
+            for(int j = -1; j <= 1; j++) {
+               if(isInBounds(x+i, y+j)) {
+                   if(i == 0 && j == 0) {continue;}
+                   if (getCell(x + i, y + j) == BoardCell.SHIP || getCell(x + i, y + j) == BoardCell.HIT) {
+                       dx = i; dy = j;
+                       break;
+                   }
+               }
+            }
+            if(dx != x || dy != y) {break;}
+        }
+        int[] r = new int[2]; r[0] = dx; r[1] = dy;
+        return r;
+    }
+
+    public boolean shipHasSunk(int x, int y) {
+        int[] dir = getDirection(x,y);
+        int newX = x; int newY = y;
+        int dx = dir[0]; int dy = dir[1];
+
+        for(int i = 0; i < BOARD_SIZE; i++) {
+            if(isInBounds(newX, newY)) {
+                switch(getCell(newX+dx, newY+dy)) {
+                    case HIT: newX = newX+dx; newY = newY+dy; break;
+                    case SHIP: return false;
+                    default: dx = dx*-1; dy = dy*-1; newX = x; newY = y;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean shipHasSunk(Vector2i coords) {
+        return shipHasSunk(coords.getX(), coords.getY());
+    }
+
     /**
      * Diese Funktion prüft, ob der Spieler getroffen wurde.
      * @param x Die x-Koordinate des Schusses
