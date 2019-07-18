@@ -153,12 +153,16 @@ public class App extends Application
 
         userBoardView.addEventHandler(BoardViewCellClickedEvent.EVENT_TYPE, event ->
         {
+            if(this.getUserPlayer().isReady())
+            {
+                new TextAlert("Info", "Du hast bereits alle Schiffe platziert!\nDu kannst deinen Gegner jetzt auf dem oberen Board unter Beschuss nehmen.");
+                return;
+            }
             if(!userBoardView.isEnabled())
             {
                 new TextAlert("Info", "Bitte warte, bis sich dein Gegner verbindet!");
                 return;
             }
-            if(this.getUserPlayer().isReady()) return;
 
             if( this.getUserPlayer().getBoard().addShip(event.getCoords(), this.getUserPlayer().getFirstAvailableShip(), this.getUserPlayer().getShipOrientation()) )
             {
@@ -199,6 +203,11 @@ public class App extends Application
 
             if(!this.getEnemyPlayer().getBoard().shoot(event.getCoords()))
             {
+                /*if(this.getEnemyPlayer().getBoard().isShipSunken(event.getCoords()))
+                {
+                    new TextAlert("Info", "Schiff versenkt!");
+                }*/ // Zum testen auskommentieren
+
                 this.getUserPlayer().setHasTurn(false);
                 this.getEnemyPlayer().setHasTurn(true);
             }
