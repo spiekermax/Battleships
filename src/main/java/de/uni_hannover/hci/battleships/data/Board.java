@@ -61,29 +61,32 @@ public class Board {
                if(isInBounds(x+i, y+j)) {
                    if(i == 0 && j == 0) {continue;}
                    if (getCell(x + i, y + j) == BoardCell.SHIP || getCell(x + i, y + j) == BoardCell.HIT) {
-                       dx = i; dy = j;
-                       break;
+                       return new Vector2i(i,j);
                    }
                }
             }
-            if(dx != x || dy != y) {break;}
         }
-
-        return new Vector2i(dx, dy);
+        return new Vector2i(0,0);
     }
 
     public boolean isShipSunken(int x, int y) {
-        Vector2i dirs = this.getDirection(x,y);
-        int dx = dirs.getX(); int dy = dirs.getY();
+        if(getCell(x,y) != BoardCell.HIT) {return false;}
 
-        int newX = x; int newY = y;
-        for(int i = 0; i < BOARD_SIZE; i++) {
-            if(Board.isInBounds(newX, newY)) {
-                switch(this.getCell(newX+dx, newY+dy)) { // <- Hier entsteht der OutOfBounds-Fehler: du überprüfst nicht, ob auch diese Koordinate in-bounds ist.
-                    case HIT: newX = newX+dx; newY = newY+dy; break;
-                    case SHIP: return false;
-                    default: dx = dx*-1; dy = dy*-1; newX = x; newY = y;
-                }
+        Vector2i dirs = this.getDirection(x,y);
+
+        for(int dx = x, dy = y;
+            isInBounds(dx,dy) && getCell(dx,dy) != BoardCell.WATER && getCell(dx,dy) != BoardCell.MISS;
+            dx = dx+dirs.getX(), dy = dy+dirs.getY()) {
+            if(getCell(dx,dy) == BoardCell.SHIP) {
+                return false;
+            }
+        }
+
+        for(int dx = x, dy = y;
+            isInBounds(dx,dy) && getCell(dx,dy) != BoardCell.WATER && getCell(dx,dy) != BoardCell.MISS;
+            dx = dx+dirs.getX()*-1, dy = dy+dirs.getY()*-1) {
+            if(getCell(dx,dy) == BoardCell.SHIP) {
+                return false;
             }
         }
         return true;
