@@ -105,7 +105,15 @@ public class App extends Application
         {
             if(this.getEnemyPlayer() != null) throw new IllegalStateException("ERROR: App.start(): Player name has already been set!");
 
-            this._enemy = new Player(event.getUserName(), false);
+            switch(this.getNetworkSocket().getType())
+            {
+                case CLIENT:
+                    this._enemy = new Player(event.getUserName(), true);
+                    break;
+                case SERVER:
+                    this._enemy = new Player(event.getUserName(), false);
+                    break;
+            }
         });
 
 
@@ -305,13 +313,16 @@ public class App extends Application
                 return;
             }
 
-            this._user = new Player(playerConfigResponse.getName(), true);
             switch(this.getNetworkSocket().getType())
             {
                 case CLIENT:
+                    this._user = new Player(playerConfigResponse.getName(), false);
+
                     this.getNetworkSocket().sendUserName(playerConfigResponse.getName());
                     break;
                 case SERVER:
+                    this._user = new Player(playerConfigResponse.getName(), true);
+
                     this.getNetworkSocket().getEventEmitter().addEventHandler(NetworkSocketHandshakeReceivedEvent.EVENT_TYPE, event ->
                             this.getNetworkSocket().sendUserName(playerConfigResponse.getName()));
                     break;
