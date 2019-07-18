@@ -7,7 +7,7 @@
 - [ ] Default name, prevent name collisions
 - [x] Confirm dialog with enter
 - [ ] Minianleitung
-- [ ] ! Erster Zug Problem
+- [x] ! Erster Zug Problem
 - [x] Shiporientation übertragen
 - [ ] play again
 - [ ] Constants Klasse

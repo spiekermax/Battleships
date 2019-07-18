@@ -238,11 +238,6 @@ public class Server implements NetworkSocket
         }
     }
 
-    public void sendGameState(/* Irgendein Objekt, dass den Spielstand beinhaltet */)
-    {
-        // Soll den Spielstand an verbundenen Client senden.
-    }
-
 
     /* GETTERS & SETTERS */
 
