@@ -155,7 +155,7 @@ public class App extends Application
         {
             if(this.getUserPlayer().isReady())
             {
-                new TextAlert("Info", "Du hast bereits alle Schiffe platziert!\nDu kannst deinen Gegner jetzt auf dem oberen Board unter Beschuss nehmen.");
+                new TextAlert("Info", "Du hast bereits alle Schiffe platziert!\nDu kannst deinen Gegner jetzt angreifen.");
                 return;
             }
             if(!userBoardView.isEnabled())
