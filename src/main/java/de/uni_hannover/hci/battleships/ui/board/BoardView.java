@@ -76,7 +76,7 @@ public class BoardView extends GridPane
     /* CALLBACKS */
 
     /**
-     * Wird aufgerufen, wann immer die größe dieser Komponente verändert wird.
+     * Wird aufgerufen, wann immer die Größe dieser Komponente verändert wird.
      * Passt die Größe des Spielbrettrasters automatisch so an, dass das Seitenverältnis gleich bleibt.
      * @param observableValue Die veränderte 'ObservableValue'.
      * @param oldValue Die alte Breite bzw. Höhe dieser Komponente (sollte nicht verwendet werden).
@@ -104,8 +104,9 @@ public class BoardView extends GridPane
     }
 
     /**
-     * TODO
-     * @param e
+     * Wird augerufen, wann immer die Maus über diese Komponente bewegt wird.
+     * Das anvisierte Feld wird gehighlighted.
+     * @param e Die Eventinformationen.
      */
     private void onMouseMove(MouseEvent e)
     {
@@ -136,8 +137,9 @@ public class BoardView extends GridPane
     }
 
     /**
-     * TODO
-     * @param e
+     * Wird aufgerufen, wann immer mit der Maus auf diese Komponente geklickt wird,
+     * Sendet die zugehörigen Events.
+     * @param e Die Eventinformationen.
      */
     private void onMouseClick(MouseEvent e)
     {
@@ -154,8 +156,9 @@ public class BoardView extends GridPane
     }
 
     /**
-     * TODO
-     * @param e
+     * Wird aufgerufen, wann immer die Maus diese Komponente verlässt.
+     * Entfernt jegliches Highlighting.
+     * @param e Die Eventinformationen.
      */
     private void onMouseExited(MouseEvent e)
     {
@@ -174,8 +177,8 @@ public class BoardView extends GridPane
     /* METHODS */
 
     /**
-     * TODO
-     * @param board
+     * Zeigt die Daten aus dem übergebenen Board 'board' an.
+     * @param board Das darzustelende Board.
      */
     public void display(Board board)
     {
@@ -212,8 +215,8 @@ public class BoardView extends GridPane
     }
 
     /**
-     * TODO
-     * @return
+     * Berechnet die ideale Größe eines Feldes, abhängig von der tatsächlich erlaubten Größe dieser Komponente.
+     * @return Die ideale Größe eines einzelnen Feldes.
      */
     private double calcCellSize()
     {
@@ -221,10 +224,10 @@ public class BoardView extends GridPane
     }
 
     /**
-     * TODO
-     * @param mouseX
-     * @param mouseY
-     * @return
+     * Berechnet die Koordinaten des anvisierten Feldes, abhängig von den übergebenen Mauskoordinaten.
+     * @param mouseX Die X-Koordinate der Maus.
+     * @param mouseY Die Y-Koordinate der Maus.
+     * @return Die Koordinaten des anvisierten Feldes.
      */
     private Vector2i calcCellCoords(double mouseX, double mouseY)
     {
@@ -240,10 +243,10 @@ public class BoardView extends GridPane
     /* GETTERS & SETTERS */
 
     /**
-     * TODO
-     * @param x
-     * @param y
-     * @return
+     * Gibt das Feld/Zelle an der spezifizierten Koordinate zurück.
+     * @param x Die X-Koordinate der Zelle.
+     * @param y Die Y-Koordinate der Zelle.
+     * @return Die Zelle.
      */
     private BoardViewCell getCell(int x, int y)
     {
@@ -253,9 +256,9 @@ public class BoardView extends GridPane
     }
 
     /**
-     * TODO
-     * @param coords
-     * @return
+     * Gibt das Feld/Zelle an der spezifizierten Koordinate zurück.
+     * @param coords Die Koordinaten der Zelle.
+     * @return Die Zelle.
      */
     private BoardViewCell getCell(Vector2i coords)
     {
@@ -263,8 +266,8 @@ public class BoardView extends GridPane
     }
 
     /**
-     * TODO
-     * @return
+     * Gibt zurück, ob diese BoardView aktiviert ist.
+     * @return Ob, diese BoardView aktiviert ist.
      */
     public boolean isEnabled()
     {
@@ -272,8 +275,8 @@ public class BoardView extends GridPane
     }
 
     /**
-     * TODO
-     * @param newIsEnabled
+     * Aktiviert/deaktiviert diese BoardView und entfernt dadurch Maus-Highlighting.
+     * @param newIsEnabled Der neue Zustand.
      */
     public void setIsEnabled(boolean newIsEnabled)
     {
@@ -282,8 +285,8 @@ public class BoardView extends GridPane
     }
 
     /**
-     * TODO
-     * @return
+     * Gibt zurück, ob die Schiffe angeziegt werden.
+     * @return Ob die Schiffe angezeigt werden.
      */
     public boolean getShipsVisible()
     {
@@ -291,8 +294,8 @@ public class BoardView extends GridPane
     }
 
     /**
-     * TODO
-     * @param newShipsVisible
+     * Setzt, ob die Schiffe angezeigt werden.
+     * @param newShipsVisible Der neue Zustand
      */
     public void setShipsVisible(boolean newShipsVisible)
     {
@@ -300,8 +303,8 @@ public class BoardView extends GridPane
     }
 
     /**
-     * TODO
-     * @return
+     * Gibt die zuletzt anvisierte Zelle zurück.
+     * @return Die Zelle
      */
     private BoardViewCell getLastMouseTargetCell()
     {
@@ -309,8 +312,8 @@ public class BoardView extends GridPane
     }
 
     /**
-     * TODO
-     * @param lastMouseTargetCell
+     * Setzt die zuletzt anvisierte Zelle.
+     * @param lastMouseTargetCell Der neue Zustand.
      */
     private void setLastMouseTargetCell(BoardViewCell lastMouseTargetCell)
     {

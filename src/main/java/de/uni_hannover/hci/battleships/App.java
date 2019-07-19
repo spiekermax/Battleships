@@ -206,7 +206,7 @@ public class App extends Application
                 if(this.getEnemyPlayer().getBoard().isShipSunken(event.getCoords()))
                 {
                     new TextAlert("Info", "Schiff versenkt!");
-                } // Zum testen auskommentieren
+                }
 
                 this.getUserPlayer().setHasTurn(false);
                 this.getEnemyPlayer().setHasTurn(true);
