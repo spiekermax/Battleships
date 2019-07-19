@@ -11,5 +11,5 @@
 - [x] Shiporientation übertragen
 - [ ] play again
 - [ ] Constants Klasse
-- [ ] Socket connection checker to detect dead server
+- [x] Socket connection checker to detect dead server
 - [x] Schiff gesunken Nachricht!
