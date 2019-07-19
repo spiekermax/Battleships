@@ -12,4 +12,4 @@
 - [ ] play again
 - [ ] Constants Klasse
 - [ ] Socket connection checker to detect dead server
-- [ ] Schiff gesunken Nachricht!
+- [x] Schiff gesunken Nachricht!
