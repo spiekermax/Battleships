@@ -51,11 +51,9 @@ public class NetworkConfigDialog extends Dialog<NetworkConfigDialogResponse>
 
             if(buttonType == this.getConfirmButton())
             {
-                System.out.println(this.getNetworkSocketDropdownSelection());
                 switch(this.getNetworkSocketDropdownSelection())
                 {
                     case SERVER:
-                        System.out.println("Hello world");
                         if(!NetworkSocketConnectionValidator.validatePort(this.getPortTextFieldNum())) break;
                         return new NetworkConfigDialogResponse(NetworkConfigDialogResponseType.VALID, null, this.getPortTextFieldNum(), NetworkSocketType.SERVER);
                     case CLIENT:
