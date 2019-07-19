@@ -4,9 +4,11 @@ package de.uni_hannover.hci.battleships.network.socket;
 import de.uni_hannover.hci.battleships.network.NetworkSocket;
 import de.uni_hannover.hci.battleships.network.NetworkSocketType;
 import de.uni_hannover.hci.battleships.network.event.*;
+import de.uni_hannover.hci.battleships.ui.dialog.alert.TextAlert;
 import de.uni_hannover.hci.battleships.util.Vector2i;
 
 // JavaFX
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 
@@ -38,7 +40,7 @@ public class Server implements NetworkSocket
     /* LIFECYCLE */
 
     /**
-     * TODO
+     * Der Server wird mit einem Port erstellt
      * @param port
      */
     public Server(int port)
@@ -63,33 +65,47 @@ public class Server implements NetworkSocket
     /* METHODS */
 
     /**
-     * TODO
+     * Handshake Bestätigung wird an die Clients gesendet
      */
     public void sendHandshake()
     {
-        this.sendString("handshake");
+        this.sendString("handshake", true);
+    }
+
+    /**
+     * TODO
+     * @param string
+     */
+    private void sendString(String string)
+    {
+        this.sendString(string, false);
     }
 
     /**
      * Methode zum Versenden von Nachrichten
      * @param string
      */
-    private void sendString(String string)
+    private void sendString(String string, boolean force)
     {
         try
         {
+            if(!force && !this.isClientReady())
+            {
+                Platform.runLater(() -> new TextAlert("Info", "Bitte warte, bis sich dein Gegner verbindet!"));
+                return;
+            }
+
             this.getOutputStreamWriter().write(string + "\n");
             this.getOutputStreamWriter().flush();
         }
         catch(IOException e)
         {
-            // TODO: Besseres ERROR-Handling
             e.printStackTrace();
         }
     }
 
     /**
-     * TODO
+     * Eine Nachricht wird als String an den Server versendet
      * @param message
      */
     public void sendMessage(String message)
@@ -98,7 +114,7 @@ public class Server implements NetworkSocket
     }
 
     /**
-     * TODO
+     * Die Vektorkoordinaten werden an den Server geschickt
      * @param vector
      */
     public void sendVector(Vector2i vector)
@@ -107,7 +123,7 @@ public class Server implements NetworkSocket
     }
 
     /**
-     * TODO
+     * Der Nutzername des Spielers wird an den Server versendet
      * @param userName
      */
     public void sendUserName(String userName)
@@ -116,7 +132,7 @@ public class Server implements NetworkSocket
     }
 
     /**
-     * TODO
+     * Sendet die Orientierung der Schiffe an den Client
      */
     public void sendOrientationSwitch()
     {
@@ -220,11 +236,6 @@ public class Server implements NetworkSocket
         {
             this.setIsRunning(false);
         }
-    }
-
-    public void sendGameState(/* Irgendein Objekt, dass den Spielstand beinhaltet */)
-    {
-        // Soll den Spielstand an verbundenen Client senden.
     }
 
 

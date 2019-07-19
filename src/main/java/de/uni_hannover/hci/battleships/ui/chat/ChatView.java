@@ -1,7 +1,7 @@
 package de.uni_hannover.hci.battleships.ui.chat;
 
 // Internal dependencies
-import de.uni_hannover.hci.battleships.datav2.Player;
+import de.uni_hannover.hci.battleships.data.Player;
 import de.uni_hannover.hci.battleships.util.resource.R;
 import de.uni_hannover.hci.battleships.ui.chat.event.ChatViewMessageConfirmedEvent;
 
@@ -22,7 +22,7 @@ public class ChatView extends VBox
     /* COMPONENTS */
 
     /**
-     * TODO
+     * Die Anzeige des Chatverlaufs.
      */
     @FXML
     private TextArea _messageView;
@@ -79,9 +79,9 @@ public class ChatView extends VBox
     /* METHODS */
 
     /**
-     * TODO
-     * @param source
-     * @param message
+     * Fügt dem Messageboard eine Nachricht hinzu und scrollt zur neusten Nachricht.
+     * @param source Der Spieler, der die Nachricht sendet.
+     * @param message Die Nachricht.
      */
     public void addMessage(Player source, String message)
     {
@@ -93,8 +93,8 @@ public class ChatView extends VBox
     /* GETTERS & SETTERS */
 
     /**
-     * TODO
-     * @return
+     * Gibt die Nachrichtenanzeige zurück.
+     * @return Die Nachrichtenanzeige.
      */
     private TextArea getMessageView()
     {
@@ -102,8 +102,8 @@ public class ChatView extends VBox
     }
 
     /**
-     * TODO
-     * @return
+     * Gibt das Eingabefeld zurück.
+     * @return Das Eingabefeld.
      */
     private TextField getInputField()
     {

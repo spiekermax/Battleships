@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.collections.FXCollections?>
 
 
 <VBox
@@ -10,6 +14,16 @@
     xmlns:fx="http://javafx.com/fxml"
 
     spacing="4">
+
+    <!-- Network-Socket Dropdown -->
+    <ComboBox fx:id="_networkSocketDropdown" promptText="Client (Join)" maxWidth="1.7976931348623157E308">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="Server (Host)" />
+                <String fx:value="Client (Join)" />
+            </FXCollections>
+        </items>
+    </ComboBox>
 
     <!-- IP-Adresse -->
     <Text>IP-Adresse</Text>

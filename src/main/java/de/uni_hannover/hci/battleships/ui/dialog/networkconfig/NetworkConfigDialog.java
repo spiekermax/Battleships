@@ -11,24 +11,23 @@ import de.uni_hannover.hci.battleships.util.resource.R;
 import java.io.IOException;
 
 // JavaFX
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 
 public class NetworkConfigDialog extends Dialog<NetworkConfigDialogResponse>
 {
     /* COMPONENTS */
 
-    private final ButtonType _hostButton = new ButtonType("Host");
-    private final ButtonType _joinButton = new ButtonType("Join");
+    private ComboBox _networkSocketDropdown;
+
+    private final ButtonType _confirmButton = new ButtonType("Confirm", ButtonBar.ButtonData.YES);
     private final ButtonType _cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
-    private final TextField _ipAdressTextField;
-    private final TextField _portTextField;
+    private TextField _ipAdressTextField;
+    private TextField _portTextField;
 
 
     /* LIFECYCLE */
@@ -42,30 +41,98 @@ public class NetworkConfigDialog extends Dialog<NetworkConfigDialogResponse>
 
         this.setTitle("Party Wizard");
         this.setHeaderText("Host a new game or join an existing one?");
+        this.getDialogPane().getButtonTypes().setAll(this.getConfirmButton(), this.getCancelButton());
 
+        this.loadHostView();
+
+        this.setResultConverter(buttonType ->
+        {
+            if(buttonType == this.getCancelButton()) return new NetworkConfigDialogResponse(NetworkConfigDialogResponseType.ABORT, null, 0, null);
+
+            if(buttonType == this.getConfirmButton())
+            {
+                switch(this.getNetworkSocketDropdownSelection())
+                {
+                    case SERVER:
+                        if(!NetworkSocketConnectionValidator.validatePort(this.getPortTextFieldNum())) break;
+                        return new NetworkConfigDialogResponse(NetworkConfigDialogResponseType.VALID, null, this.getPortTextFieldNum(), NetworkSocketType.SERVER);
+                    case CLIENT:
+                        if(!NetworkSocketConnectionValidator.validateActiveServer(this.getPortTextFieldNum(), this.getIpAdressTextFieldText())) break;
+                        return new NetworkConfigDialogResponse(NetworkConfigDialogResponseType.VALID, this.getIpAdressTextFieldText(), this.getPortTextFieldNum(), NetworkSocketType.CLIENT);
+                }
+            }
+
+            return new NetworkConfigDialogResponse(NetworkConfigDialogResponseType.INVALID, null, 0, null);
+        });
+    }
+
+    /* METHODS */
+
+    /**
+     * TODO
+     */
+    private void loadHostView()
+    {
         try
         {
-            Node dialogContent = FXMLLoader.load( R.layout("dialog/networkconfig.fxml") );
-            this.getDialogPane().setContent(dialogContent);
-            this.getDialogPane().getButtonTypes().setAll(this.getHostButton(), this.getJoinButton(), this.getCancelButton());
+            Node dialogContent = FXMLLoader.load( R.layout("dialog/networkconfig_host.fxml") );
+            this.getDialogPane().setContent( dialogContent );
+
+            this._networkSocketDropdown = (ComboBox) dialogContent.lookup( R.id("_networkSocketDropdown") );
+            this.getNetworkSocketDropdown().getSelectionModel().select(0);
 
             this._ipAdressTextField = (TextField) dialogContent.lookup( R.id("_ipAdressInputField") );
+
+            this._portTextField = (TextField) dialogContent.lookup( R.id("_portInputField") );
+            Platform.runLater(() -> this.getPortTextField().requestFocus());
+
+            this.getNetworkSocketDropdown().valueProperty().addListener((observableValue, oldState, newState) ->
+            {
+                switch(this.getNetworkSocketDropdownSelection())
+                {
+                    case SERVER:
+                        break;
+                    case CLIENT:
+                        this.loadJoinView();
+                        break;
+                }
+            });
+        }
+        catch(IOException e)
+        {
+            throw new RuntimeException("ERROR: NetworkConfigDialog(): Failed to load main layout!", e);
+        }
+    }
+
+    /**
+     * TODO
+     */
+    private void loadJoinView()
+    {
+        try
+        {
+            Node dialogContent = FXMLLoader.load( R.layout("dialog/networkconfig_join.fxml") );
+            this.getDialogPane().setContent( dialogContent );
+            this.getDialogPane().getScene().getWindow().sizeToScene();
+
+            this._networkSocketDropdown = (ComboBox) dialogContent.lookup( R.id("_networkSocketDropdown") );
+            this.getNetworkSocketDropdown().getSelectionModel().select(1);
+
+            this._ipAdressTextField = (TextField) dialogContent.lookup( R.id("_ipAdressInputField") );
+            Platform.runLater(() -> this.getIpAdressTextField().requestFocus());
+
             this._portTextField = (TextField) dialogContent.lookup( R.id("_portInputField") );
 
-            this.setResultConverter(buttonType ->
+            this.getNetworkSocketDropdown().valueProperty().addListener((observableValue, oldState, newState) ->
             {
-                if(buttonType == this.getCancelButton()) return new NetworkConfigDialogResponse(NetworkConfigDialogResponseType.ABORT, null, 0, null);
-
-                if(buttonType == this.getHostButton() && NetworkSocketConnectionValidator.validatePort(this.getPortTextFieldNum()))
+                switch(this.getNetworkSocketDropdownSelection())
                 {
-                    return new NetworkConfigDialogResponse(NetworkConfigDialogResponseType.VALID, this.getIpAdressTextFieldText(), this.getPortTextFieldNum(), NetworkSocketType.SERVER);
+                    case SERVER:
+                        this.loadHostView();
+                        break;
+                    case CLIENT:
+                        break;
                 }
-                else if(buttonType == this.getJoinButton() && NetworkSocketConnectionValidator.validateActiveServer(this.getPortTextFieldNum(), this.getIpAdressTextFieldText()))
-                {
-                    return new NetworkConfigDialogResponse(NetworkConfigDialogResponseType.VALID, this.getIpAdressTextFieldText(), this.getPortTextFieldNum(), NetworkSocketType.CLIENT);
-                }
-
-                return new NetworkConfigDialogResponse(NetworkConfigDialogResponseType.INVALID, null, 0, null);
             });
         }
         catch(IOException e)
@@ -81,18 +148,9 @@ public class NetworkConfigDialog extends Dialog<NetworkConfigDialogResponse>
      * TODO
      * @return
      */
-    private ButtonType getHostButton()
+    private ButtonType getConfirmButton()
     {
-        return this._hostButton;
-    }
-
-    /**
-     * TODO
-     * @return
-     */
-    private ButtonType getJoinButton()
-    {
-        return this._joinButton;
+        return this._confirmButton;
     }
 
     /**
@@ -102,6 +160,32 @@ public class NetworkConfigDialog extends Dialog<NetworkConfigDialogResponse>
     private ButtonType getCancelButton()
     {
         return this._cancelButton;
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    private ComboBox getNetworkSocketDropdown()
+    {
+        return this._networkSocketDropdown;
+    }
+
+    /**
+     * TODO
+     * @return
+     */
+    private NetworkSocketType getNetworkSocketDropdownSelection()
+    {
+        switch(this.getNetworkSocketDropdown().getSelectionModel().getSelectedIndex())
+        {
+            case 0:
+                return NetworkSocketType.SERVER;
+            case 1:
+                return NetworkSocketType.CLIENT;
+        }
+
+        return null;
     }
 
     /**

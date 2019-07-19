@@ -1,13 +1,17 @@
 package de.uni_hannover.hci.battleships;
 
 // Internal dependencies
-import de.uni_hannover.hci.battleships.datav2.Player;
+import de.uni_hannover.hci.battleships.data.Board;
+import de.uni_hannover.hci.battleships.data.BoardCell;
+import de.uni_hannover.hci.battleships.data.Player;
 import de.uni_hannover.hci.battleships.network.NetworkSocket;
 import de.uni_hannover.hci.battleships.network.event.*;
 import de.uni_hannover.hci.battleships.network.socket.Client;
 import de.uni_hannover.hci.battleships.network.socket.Server;
 import de.uni_hannover.hci.battleships.ui.board.BoardView;
 import de.uni_hannover.hci.battleships.ui.board.event.BoardViewCellClickedEvent;
+import de.uni_hannover.hci.battleships.ui.board.event.BoardViewCellHoveredEvent;
+import de.uni_hannover.hci.battleships.ui.board.event.BoardViewMouseExitedEvent;
 import de.uni_hannover.hci.battleships.ui.board.event.BoardViewRightClickedEvent;
 import de.uni_hannover.hci.battleships.ui.chat.ChatView;
 import de.uni_hannover.hci.battleships.ui.chat.event.ChatViewMessageConfirmedEvent;
@@ -101,7 +105,15 @@ public class App extends Application
         {
             if(this.getEnemyPlayer() != null) throw new IllegalStateException("ERROR: App.start(): Player name has already been set!");
 
-            this._enemy = new Player(event.getUserName(), false);
+            switch(this.getNetworkSocket().getType())
+            {
+                case CLIENT:
+                    this._enemy = new Player(event.getUserName(), true);
+                    break;
+                case SERVER:
+                    this._enemy = new Player(event.getUserName(), false);
+                    break;
+            }
         });
 
 
@@ -121,15 +133,36 @@ public class App extends Application
         });
 
 
-        // Handle Board-Clicks
+        // Handle Board-Mausinteraktionen
+        userBoardView.addEventHandler(BoardViewCellHoveredEvent.EVENT_TYPE, event ->
+        {
+            if(!userBoardView.isEnabled() || this.getUserPlayer().isReady()) return;
+            if(!Board.isInBounds(event.getCoords())) return;
+
+            Board ghostBoard = new Board(this.getUserPlayer().getBoard());
+            if( ghostBoard.addShip(event.getCoords(), BoardCell.GHOST_SHIP, this.getUserPlayer().getFirstAvailableShip(), this.getUserPlayer().getShipOrientation()) )
+            {
+                userBoardView.display(ghostBoard);
+            }
+            else
+            {
+                userBoardView.display(this.getUserPlayer().getBoard());
+            }
+        });
+        userBoardView.addEventHandler(BoardViewMouseExitedEvent.EVENT_TYPE, event -> userBoardView.display(this.getUserPlayer().getBoard()));
+
         userBoardView.addEventHandler(BoardViewCellClickedEvent.EVENT_TYPE, event ->
         {
-            if(this.getServer() != null && !this.getServer().isClientReady())
+            if(this.getUserPlayer().isReady())
+            {
+                new TextAlert("Info", "Du hast bereits alle Schiffe platziert!\nDu kannst deinen Gegner jetzt angreifen.");
+                return;
+            }
+            if(!userBoardView.isEnabled())
             {
                 new TextAlert("Info", "Bitte warte, bis sich dein Gegner verbindet!");
                 return;
             }
-            if(this.getUserPlayer().isReady()) return;
 
             if( this.getUserPlayer().getBoard().addShip(event.getCoords(), this.getUserPlayer().getFirstAvailableShip(), this.getUserPlayer().getShipOrientation()) )
             {
@@ -150,6 +183,9 @@ public class App extends Application
         {
             this.getUserPlayer().toggleShipOrientation();
             this.getNetworkSocket().sendOrientationSwitch();
+
+            // Update Ghostship
+            userBoardView.fireEvent(new BoardViewCellHoveredEvent(event.getCoords()));
         });
 
         enemyBoardView.addEventHandler(BoardViewCellClickedEvent.EVENT_TYPE, event ->
@@ -169,6 +205,13 @@ public class App extends Application
             {
                 this.getUserPlayer().setHasTurn(false);
                 this.getEnemyPlayer().setHasTurn(true);
+            }
+            else
+            {
+                if(this.getEnemyPlayer().getBoard().isShipSunken(event.getCoords()))
+                {
+                    new TextAlert("Info", "Schiff versenkt!");
+                }
             }
             this.getNetworkSocket().sendVector(event.getCoords());
             enemyBoardView.display(this.getEnemyPlayer().getBoard());
@@ -228,7 +271,7 @@ public class App extends Application
     /**
      * TODO
      */
-    private void terminate()
+    public static void terminate()
     {
         Platform.exit();
         System.exit(0);
@@ -245,7 +288,7 @@ public class App extends Application
         NetworkConfigDialog networkConfigDialog = new NetworkConfigDialog();
         networkConfigDialog.showAndWait().ifPresent(networkConfigResponse ->
         {
-            if(networkConfigResponse.isAborted()) this.terminate();
+            if(networkConfigResponse.isAborted()) App.terminate();
             if(!networkConfigResponse.isValid())
             {
                 new TextAlert("ERROR", "Ungültige Eingabe!");
@@ -273,7 +316,7 @@ public class App extends Application
         PlayerConfigDialog playerConfigDialog = new PlayerConfigDialog();
         playerConfigDialog.showAndWait().ifPresent(playerConfigResponse ->
         {
-            if(playerConfigResponse.isAborted()) this.terminate();
+            if(playerConfigResponse.isAborted()) App.terminate();
             if(!playerConfigResponse.isValid())
             {
                 new TextAlert("ERROR", "Ungültige Eingabe!");
@@ -281,13 +324,16 @@ public class App extends Application
                 return;
             }
 
-            this._user = new Player(playerConfigResponse.getName(), true);
             switch(this.getNetworkSocket().getType())
             {
                 case CLIENT:
+                    this._user = new Player(playerConfigResponse.getName(), false);
+
                     this.getNetworkSocket().sendUserName(playerConfigResponse.getName());
                     break;
                 case SERVER:
+                    this._user = new Player(playerConfigResponse.getName(), true);
+
                     this.getNetworkSocket().getEventEmitter().addEventHandler(NetworkSocketHandshakeReceivedEvent.EVENT_TYPE, event ->
                             this.getNetworkSocket().sendUserName(playerConfigResponse.getName()));
                     break;
