@@ -1,7 +1,7 @@
 ### TODO
 
 - [x] Auf gültige Eingaben überprüfen
-- [ ] Server/Client Dialog mit Dropdown ersetzen
+- [x] Server/Client Dialog mit Dropdown ersetzen
 - [x] Ghostship
 - [ ] Default port / ip
 - [ ] Default name, prevent name collisions

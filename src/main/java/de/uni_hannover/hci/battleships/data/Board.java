@@ -53,7 +53,7 @@ public class Board {
         return true;
     }
 
-    private Vector2i getDirection(int x, int y) {
+    public Vector2i getDirection(int x, int y) {
         int dx = x; int dy = y;
 
         for(int i = -1; i <= 1; i++) {

@@ -203,13 +203,15 @@ public class App extends Application
 
             if(!this.getEnemyPlayer().getBoard().shoot(event.getCoords()))
             {
+                this.getUserPlayer().setHasTurn(false);
+                this.getEnemyPlayer().setHasTurn(true);
+            }
+            else
+            {
                 if(this.getEnemyPlayer().getBoard().isShipSunken(event.getCoords()))
                 {
                     new TextAlert("Info", "Schiff versenkt!");
                 }
-
-                this.getUserPlayer().setHasTurn(false);
-                this.getEnemyPlayer().setHasTurn(true);
             }
             this.getNetworkSocket().sendVector(event.getCoords());
             enemyBoardView.display(this.getEnemyPlayer().getBoard());
